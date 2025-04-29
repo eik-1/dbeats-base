@@ -1,0 +1,13 @@
+logs
+
+node_modules
+
+.env
+
+.vscode
+
+.env.local
+
+.env.development.local
+
+.env.test.local
