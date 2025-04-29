@@ -3,8 +3,9 @@ import { useWeb3ModalAccount } from "@web3modal/ethers/react"
 import React, { useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 
-import ProfileCard from "../components/ProfileCard"
 import { useUser } from "../contexts/UserProvider"
+import Button from "../components/ui/Button"
+import ProfileSongsListItem from "../components/ProfileSongsListItem"
 
 function Profile() {
     const { address, isConnected } = useWeb3ModalAccount()
@@ -55,33 +56,34 @@ function Profile() {
 
     if (!isConnected || !user) {
         return (
-            <div className="text-center text-xl text-[#424242] mt-8 font-['Acid_Grotesk_Medium']">
+            <div className="text-center text-xl text-zinc-50 flex items-center justify-center h-full">
                 Please connect your wallet to view your profile.
             </div>
         )
     }
 
     return (
-        <div className="p-8 box-border">
+        <div className="p-8">
             <div className="flex items-center justify-between mb-8">
-                <img
-                    src={user.profilePicture}
-                    alt={user.name}
-                    className="w-[150px] h-[150px] rounded-[10%] object-cover"
-                />
+                <div className="rounded-full w-36 h-36">
+                    <img
+                        src={user.profilePicture}
+                        alt={user.name}
+                        className="object-cover w-36 h-36 rounded-full"
+                    />
+                </div>
+
                 <div className="flex-grow ml-8">
-                    <h1 className="text-4xl mb-2 font-['Acid_Grotesk_Bold'] text-[#424242]">
+                    <h1 className="text-5xl font-semibold mb-2 text-zinc-50">
                         {user.name}
                     </h1>
-                    <p className="text-base text-[#666] font-['Acid_Grotesk_Regular']">
-                        {address}
-                    </p>
+                    <p className="text-base text-zinc-100">{address}</p>
                 </div>
-                <div className="text-[#F5F5F5] flex gap-4">
+                <div className="text-zinc-50 flex gap-4">
                     {!user.hasApplied ? (
                         <button
                             onClick={handleApply}
-                            className="bg-[#424242] border-none px-6 py-3 rounded cursor-pointer text-base transition-colors duration-300 ease-in-out hover:bg-[#333333]"
+                            className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-zinc-100 text-zinc-900 shadow hover:bg-primary/90 h-9 px-4 py-2 rounded-3xl"
                         >
                             Apply For Artist
                         </button>
@@ -90,66 +92,72 @@ function Profile() {
                     ) : (
                         <button
                             disabled
-                            className="bg-[#BDBDBD] border-none px-6 py-3 rounded cursor-pointer text-base"
+                            className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-zinc-100 text-zinc-900 shadow hover:bg-primary/90 h-9 px-4 py-2 rounded-3xl"
                         >
                             Applied
                         </button>
                     )}
 
-                    <button
-                        onClick={() => navigate("/profile/edit")}
-                        className="bg-[#3CB4AC] border-none px-6 py-3 rounded cursor-pointer text-base transition-colors duration-300 ease-in-out hover:bg-[#2A7D77]"
-                    >
+                    <Button handleClick={() => navigate("/app/profile/edit")}>
                         Edit Profile
-                    </button>
+                    </Button>
                 </div>
             </div>
-            <div className="bg-white rounded-lg p-8 shadow-md">
-                <h2 className="text-2xl mb-4 font-['Acid_Grotesk_Bold'] text-[#424242]">
-                    About
-                </h2>
-                <p className="text-[#424242] leading-relaxed">{user.about}</p>
-            </div>
-            <h1 className="text-3xl font-['Acid_Grotesk_Bold'] text-[#424242] mt-5 mb-2.5">
-                Tracks Created
-            </h1>
-            <div>
-                {status === "pending" && (
-                    <div className="text-center text-xl text-[#424242] mt-8 font-['Acid_Grotesk_Medium']">
-                        Loading...
-                    </div>
-                )}
-                {status === "error" && (
-                    <div className="text-center text-xl text-[#424242] mt-8 font-['Acid_Grotesk_Medium']">
-                        Error occurred querying the server: {error.message}
-                    </div>
-                )}
-                {status === "success" && (
-                    <div className="mt-5 w-full flex flex-col gap-4 items-center">
-                        {data.artist ? (
-                            data.artist.nfts.map((nft) => (
-                                <Link
-                                    to={`/track/${nft.address}`}
-                                    state={{ address: nft.address }}
-                                    key={nft.address}
-                                    className="mt-5 w-full flex flex-col gap-4 items-center"
-                                >
-                                    <ProfileCard
-                                        key={nft.tokenURI}
-                                        uri={nft.tokenURI}
-                                        mintprice={nft.mintPrice}
-                                        address={nft.address}
-                                    />
-                                </Link>
-                            ))
-                        ) : (
-                            <div className="text-center text-xl text-[#424242] mt-8 font-['Acid_Grotesk_Medium']">
-                                No artist data found for the given address.
+            {user.about && (
+                <div className="p-8">
+                    <h2 className="text-2xl mb-4 text-zinc-50 font-semibold">
+                        About
+                    </h2>
+                    <p className="text-zinc-50 leading-relaxed">{user.about}</p>
+                </div>
+            )}
+
+            {user.isArtist && (
+                <>
+                    <h1 className="text-3xl font-['Acid_Grotesk_Bold'] text-zinc-50 mt-5 mb-2.5">
+                        Popular Tracks
+                    </h1>
+                    <div>
+                        {status === "pending" && (
+                            <div className="text-center text-xl text-zinc-50 mt-8">
+                                Loading...
+                            </div>
+                        )}
+                        {status === "error" && (
+                            <div className="text-center text-xl text-zinc-50 mt-8">
+                                Error occurred querying the server:{" "}
+                                {error.message}
+                            </div>
+                        )}
+                        {status === "success" && (
+                            <div className="w-full flex flex-col gap-1 items-start justify-start">
+                                {data.artist ? (
+                                    data.artist.nfts.map((nft, index) => (
+                                        <Link
+                                            to={`/app/track/${nft.address}`}
+                                            state={{ address: nft.address }}
+                                            key={nft.address}
+                                            className="w-full flex flex-col gap-4"
+                                        >
+                                            <ProfileSongsListItem
+                                                id={index + 1}
+                                                uri={nft.tokenURI}
+                                                mintprice={nft.mintPrice}
+                                                address={nft.address}
+                                            />
+                                        </Link>
+                                    ))
+                                ) : (
+                                    <div className="text-center text-xl text-zinc-50 mt-8">
+                                        No artist data found for the given
+                                        address.
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>
-                )}
-            </div>
+                </>
+            )}
         </div>
     )
 }

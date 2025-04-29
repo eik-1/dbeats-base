@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { Link } from "react-router-dom"
-import ProfileCard from "../components/ProfileCard"
 import { useUser } from "../contexts/UserProvider"
+import ProfileSongsListItem from "../components/ProfileSongsListItem"
 
 function UsersProfile() {
     const { searchUsers } = useUser()
@@ -14,8 +14,9 @@ function UsersProfile() {
 
     const { name } = useParams()
     const serverUrl = import.meta.env.VITE_SERVER_URL
+
     useEffect(() => {
-        if (user && user.walletAddress) {
+        if (user && user.walletAddress && user.isArtist) {
             setQueryStatus("pending")
             fetch(`${serverUrl}/userNfts?walletAddress=${user.walletAddress}`)
                 .then((response) => response.json())
@@ -101,7 +102,7 @@ function UsersProfile() {
                                     key={nft.address}
                                     className="mt-5 w-full flex flex-col gap-4 items-center"
                                 >
-                                    <ProfileCard
+                                    <ProfileSongsListItem
                                         key={nft.tokenURI}
                                         uri={nft.tokenURI}
                                         mintprice={nft.mintPrice}
