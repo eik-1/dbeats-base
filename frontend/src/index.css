@@ -14,6 +14,17 @@ body {
     background-color: black !important;
 }
 
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Hide spinners for number inputs in Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
 @layer components {
     .hide-scrollbar {
         -ms-overflow-style: none; /* Internet Explorer 10+ */

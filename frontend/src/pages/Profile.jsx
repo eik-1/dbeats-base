@@ -6,12 +6,12 @@ import { Link, useNavigate } from "react-router-dom"
 import { useUser } from "../contexts/UserProvider"
 import Button from "../components/ui/Button"
 import ProfileSongsListItem from "../components/ProfileSongsListItem"
+import getArtistNfts from "../Utils/services/getArtistNfts"
 
 function Profile() {
     const { address, isConnected } = useWeb3ModalAccount()
     const { user, fetchUser, applyForArtist } = useUser()
     const navigate = useNavigate()
-    const serverUrl = import.meta.env.VITE_SERVER_URL
     let newAddress
 
     if (address) {
@@ -20,22 +20,7 @@ function Profile() {
 
     const { data, status, error } = useQuery({
         queryKey: ["nfts", newAddress],
-        queryFn: async () => {
-            if (newAddress) {
-                console.log("Fetching data for artistId:", newAddress)
-                try {
-                    const response = await fetch(
-                        `${serverUrl}/userNfts?walletAddress=${newAddress}`,
-                    )
-                    const result = await response.json()
-                    console.log("Response from server:", result)
-                    return result
-                } catch (err) {
-                    console.error("Error fetching data:", err)
-                    throw err
-                }
-            }
-        },
+        queryFn: getArtistNfts,
         enabled: !!newAddress,
     })
 

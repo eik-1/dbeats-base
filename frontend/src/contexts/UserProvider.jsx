@@ -1,6 +1,6 @@
 import { useWeb3ModalAccount } from "@web3modal/ethers/react"
 import axios from "axios"
-import { createContext, useContext, useState } from "react"
+import { createContext, useContext, useEffect, useState } from "react"
 
 const UserContext = createContext()
 
@@ -11,6 +11,17 @@ function UserProvider({ children }) {
 
     const serverUrl = import.meta.env.VITE_SERVER_URL
 
+    useEffect(() => {
+        async function fetch() {
+            if (isConnected && address) {
+                await fetchUser(address)
+            } else {
+                setUser(null)
+            }
+        }
+        fetch()
+    }, [])
+
     async function fetchUser(walletAddress) {
         if (isConnected && address) {
             try {
@@ -19,6 +30,7 @@ function UserProvider({ children }) {
                     `${serverUrl}/user/${walletAddress}`,
                 )
                 setUser(response.data)
+                console.log("User fetched:", user)
                 return response.data
             } catch (error) {
                 console.error("Error fetching user:", error)

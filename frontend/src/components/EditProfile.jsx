@@ -2,8 +2,8 @@ import React, { useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { Pen } from "lucide-react"
 
-import { pinata } from "../Utils/pinataConfig"
 import { useUser } from "../contexts/UserProvider"
+import ipfsUpload from "../Utils/ipfsUpload"
 
 const EditProfile = () => {
     const { user, updateUser } = useUser()
@@ -26,12 +26,7 @@ const EditProfile = () => {
             setIsLoading(true)
             e.preventDefault()
             console.log("selectedFile", selectedFile)
-            const upload = await pinata.upload.file(selectedFile)
-            const cid = upload.data.cid
-            const url = await pinata.gateways.createSignedURL({
-                cid,
-                expires: 315400000,
-            })
+            const { url } = await ipfsUpload(selectedFile)
             const newUser = {
                 ...user,
                 profilePicture: url,
@@ -43,13 +38,13 @@ const EditProfile = () => {
             console.error(error)
         } finally {
             setIsLoading(false)
-            navigate("/profile")
+            navigate("/app/profile")
         }
     }
 
     function handleFileChange(e) {
         const file = e.target.files[0]
-        const maxSize = 2 * 1024 * 1024 // 2MB in bytes
+        const maxSize = 2 * 1024 * 1024
 
         if (file && file.size > maxSize) {
             setError("File size exceeds 2MB.")
@@ -69,22 +64,22 @@ const EditProfile = () => {
 
     return (
         <div className="p-8 box-border">
-            <h2 className="text-2xl mb-4 font-['Acid_Grotesk_Bold'] text-[#424242]">
+            <h2 className="text-2xl mb-4 font-semibold text-zinc-50">
                 Edit Profile
             </h2>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <div className="flex flex-col">
                     <div
-                        className="relative w-[150px] h-[150px] rounded-[10%] overflow-hidden cursor-pointer"
+                        className="relative w-36 h-36 rounded-full overflow-hidden cursor-pointer"
                         onClick={handleImageClick}
                     >
                         <img
                             src={profPicture}
                             alt="Profile"
-                            className="w-full h-full object-cover"
+                            className="w-36 h-36 rounded-full object-cover"
                         />
                         <div className="absolute inset-0 bg-black/50 flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity duration-300">
-                            <Pen className="text-[#3CB4AC] w-[25px] h-[25px]" />
+                            <Pen className="text-emerald-500 w-[25px] h-[25px]" />
                         </div>
                     </div>
                     <input
@@ -94,15 +89,12 @@ const EditProfile = () => {
                         accept="image/*"
                         className="hidden"
                     />
-                    <p className="text-sm text-[#666666] font-['Acid_Grotesk_Regular'] m-[0.3rem]">
+                    <p className="text-sm text-zinc-400 m-[0.3rem]">
                         {error ? error : "Max 2MB. (.jpg, .png)"}
                     </p>
                 </div>
                 <div className="flex flex-col">
-                    <label
-                        htmlFor="name"
-                        className="mb-2 font-['Acid_Grotesk_Medium'] text-[#424242]"
-                    >
+                    <label htmlFor="name" className="mb-2  text-zinc-50">
                         Name
                     </label>
                     <input
@@ -114,10 +106,7 @@ const EditProfile = () => {
                     />
                 </div>
                 <div className="flex flex-col">
-                    <label
-                        htmlFor="about"
-                        className="mb-2 font-['Acid_Grotesk_Medium'] text-[#424242]"
-                    >
+                    <label htmlFor="about" className="mb-2 text-zinc-50">
                         About
                     </label>
                     <textarea
@@ -130,15 +119,15 @@ const EditProfile = () => {
                 <div className="flex justify-between mt-4">
                     <button
                         type="submit"
-                        className="px-4 py-2 rounded bg-[#3CB4AC] text-[#F5F5F5] font-['Acid_Grotesk_Medium'] hover:bg-[#2A7D77] transition-colors duration-300"
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-emerald-500 text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 rounded-3xl"
                         disabled={isLoading}
                     >
                         {isLoading ? "Saving..." : "Save Changes"}
                     </button>
                     <button
                         type="button"
-                        onClick={() => navigate("/profile")}
-                        className="px-4 py-2 rounded bg-[#e0e0e0] text-[#424242] font-['Acid_Grotesk_Medium'] hover:bg-[#999999] transition-colors duration-300"
+                        onClick={() => navigate("/app/profile")}
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-red-400 text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 rounded-3xl"
                     >
                         Cancel
                     </button>

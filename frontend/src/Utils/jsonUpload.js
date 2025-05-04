@@ -8,7 +8,7 @@ const jsonUpload = async (props) => {
         const upload = await pinata.upload.json(props).group(groupId)
         const cid = upload.IpfsHash
         const url = `https://${gatewayUrl}/ipfs/${cid}`
-        return url
+        return { url, cid }
     } catch (error) {
         console.error("Error uploading file:", error)
     }

@@ -4,7 +4,6 @@ import React from "react"
 import { Link, useNavigate } from "react-router-dom"
 
 import { useUser } from "../contexts/UserProvider"
-import Button from "./ui/Button.jsx"
 
 function Sidebar() {
     const { isConnected } = useWeb3ModalAccount()
@@ -16,8 +15,8 @@ function Sidebar() {
     }
 
     return (
-        <div className="w-64 h-[calc(100vh-200px)] fixed ml-4 p-4 shadow-md bg-zinc-900 rounded-md">
-            <nav className="mt-10 font-bold text-lg text-zinc-50">
+        <div className="flex flex-col justify-start items-center w-64 h-[calc(100vh-200px)] fixed ml-4 p-4 shadow-md bg-zinc-900 rounded-md">
+            <nav className="mt-10 self-start font-bold text-lg text-zinc-50">
                 <SidebarItem
                     icon={<Home size={25} strokeWidth={2} />}
                     text="Home"
@@ -44,9 +43,12 @@ function Sidebar() {
                 )}
             </nav>
             {isConnected && user?.isArtist && (
-                <Button onClick={handleCreateNFT}>
-                    <Plus size={23} strokeWidth={3} /> Create NFT
-                </Button>
+                <button
+                    className="mt-5 m-auto inline-flex items-center justify-center gap-2 whitespace-nowrap text-lg font-semibold transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-emerald-500 text-zinc-50 shadow hover:bg-primary/90 h-9 px-6 py-4 rounded-3xl"
+                    onClick={handleCreateNFT}
+                >
+                    <Plus size={26} strokeWidth={4} /> Create NFT
+                </button>
             )}
         </div>
     )

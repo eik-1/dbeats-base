@@ -90,42 +90,42 @@ const router = createBrowserRouter([
         errorElement: <Error />,
         children: [
             {
-                path: "/app/profile",
+                path: "profile",
                 element: <Profile />,
                 errorElement: <Error />,
             },
             {
-                path: "/app/profile/edit",
+                path: "profile/edit",
                 element: <EditProfile />,
                 errorElement: <Error />,
             },
             {
-                path: "/app/admin",
+                path: "admin",
                 element: <Admin />,
                 errorElement: <Error />,
             },
             {
-                path: "/app/create",
+                path: "create",
                 element: <Create />,
                 errorElement: <Error />,
             },
             {
-                path: "/app/:name",
+                path: ":name",
                 element: <UsersProfile />,
                 errorElement: <Error />,
             },
             {
-                path: "/app/track/:address",
+                path: "track/:address",
                 element: <TrackInfo />,
                 errorElement: <Error />,
             },
             {
-                path: "/app/market",
+                path: "market",
                 element: <Market />,
                 errorElement: <Error />,
             },
             {
-                path: "/app/my-music",
+                path: "my-music",
                 element: <MyMusic />,
                 errorElement: <Error />,
             },
