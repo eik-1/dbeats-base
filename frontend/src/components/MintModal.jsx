@@ -1,7 +1,9 @@
 import { ethers } from "ethers"
-import { Copy } from "lucide-react"
 import React, { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import axios from "axios"
+import Confetti from "react-confetti"
+import { useWindowSize } from "react-use"
 
 import { useUser } from "../contexts/UserProvider.jsx"
 import mintNFT from "../Utils/mintNFT.js"
@@ -14,61 +16,60 @@ function MintModal({ isOpen, onClose, currentTrack }) {
 
     const [priceInUSD, setPriceInUSD] = useState("")
     const [isMinting, setIsMinting] = useState(false)
-    const dialogRef = useRef(null)
+    const [showConfetti, setShowConfetti] = useState(false)
     const { addNftToUser } = useUser()
+    const dialogRef = useRef(null)
+    const { width, height } = useWindowSize()
 
     const navigate = useNavigate()
+
+    const serverUrl = import.meta.env.VITE_SERVER_URL
 
     useEffect(() => {
         if (isOpen) {
             fetchExchangeRate()
-            dialogRef.current.showModal()
+            if (dialogRef.current) {
+                dialogRef.current.showModal()
+            }
         } else {
-            dialogRef.current.close()
+            if (dialogRef.current) {
+                dialogRef.current.close()
+            }
         }
     }, [isOpen])
 
     async function fetchExchangeRate() {
-        const url =
-            "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
-        const options = {
-            method: "GET",
-            headers: {
-                accept: "application/json",
-                "x-cg-demo-api-key": import.meta.env.VITE_COINGECKO_API,
-            },
-        }
-        try {
-            const response = await fetch(url, options)
-            const data = await response.json()
-            const exchangeRate = data.ethereum.usd
-            const usdPrice = parseFloat(priceFormat) * exchangeRate
-            setPriceInUSD(usdPrice.toFixed(2))
-        } catch (error) {
-            console.error("Error fetching exchange rate:", error)
-            setPriceInUSD("N/A")
-        }
+        const response = await axios.post(`${serverUrl}/nft/getExchangeRate`, {
+            mintPrice: price,
+        })
+        const data = response.data
+        console.log(data)
+        setPriceInUSD(data.usdPrice.toFixed(2))
     }
 
     async function handleMint() {
+        setShowConfetti(true)
         setIsMinting(true)
         try {
             const priceInWei = ethers.parseEther(priceFormat)
             const receipt = await mintNFT(currentTrack.id, priceInWei)
+            if (!receipt) {
+                throw new Error("Minting failed")
+            }
             console.log("Minting successful:", receipt)
+            const nftAddress = currentTrack.id
+            await addNftToUser(nftAddress)
+            console.log("Saved to the database")
         } catch (error) {
             console.error("Error minting NFT:", error)
         } finally {
             setIsMinting(false)
-            const nftAddress = currentTrack.id
-            await addNftToUser(nftAddress)
-            console.log("Saved to the database")
         }
     }
 
     function handleArtistNav() {
         dialogRef.current.close()
-        navigate(`/${currentTrack.artist}`)
+        navigate(`/app/${currentTrack.artist}`)
     }
 
     function handleCopy() {
@@ -80,48 +81,63 @@ function MintModal({ isOpen, onClose, currentTrack }) {
             {isOpen && (
                 <div className="fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 backdrop-blur-sm z-50" />
             )}
+            {showConfetti && (
+                <Confetti
+                    width={width}
+                    height={height}
+                    recycle={false}
+                    numberOfPieces={500}
+                    style={{
+                        position: "fixed",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        zIndex: 9999,
+                    }}
+                />
+            )}
             <dialog
                 ref={dialogRef}
-                className="bg-base-100 text-base-content w-[500px] p-4 rounded-2xl shadow-xl hide-scrollbar font-acidNormal"
+                className="bg-zinc-900 text-zinc-50 w-[400px] p-4 rounded-lg shadow-xl relative overflow-visible"
             >
-                <div className="flex flex-col max-h-[100vh]">
-                    <div className="relative pt-[100%]">
-                        <img
-                            src={currentTrack.imageUrl}
-                            alt={currentTrack.name}
-                            className="absolute shadow-lg rounded-lg top-0 left-0 aspect-square object-cover"
-                        />
-                        <div className="absolute rounded-lg inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                        <div
-                            variant="secondary"
-                            className="absolute badge badge-accent top-4 right-4  backdrop-blur-sm border-0"
-                        >
-                            {genre}
+                <div className="relative z-[2] flex flex-col h-fit">
+                    <div className="relative pt-[80%]">
+                        <div className="absolute w-72 h-72 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                            <img
+                                src={currentTrack.imageUrl}
+                                alt={currentTrack.name}
+                                className="w-full h-full object-cover rounded-lg"
+                            />
+                            <div
+                                variant="secondary"
+                                className="absolute top-2 right-2 rounded-3xl bg-emerald-500 px-3 py-1 text-sm backdrop-blur-sm border-0"
+                            >
+                                {genre}
+                            </div>
                         </div>
                     </div>
 
                     <div className="p-4 space-y-5">
                         <div className="space-y-1">
-                            <h3 className="text-2xl font-acidBold">
+                            <h3 className="text-2xl font-semibold">
                                 {currentTrack.name}
                             </h3>
                             <p
-                                className="cursor-pointer w-fit hover:text-gray-400 transition-colors"
+                                className="cursor-pointer w-fit hover:text-zinc-400 transition-colors"
                                 onClick={handleArtistNav}
                             >
                                 {currentTrack.artist}
                             </p>
                         </div>
 
-                        <div className="space-y-4 p-4 rounded-lg bg-base-300 border border-base-content">
+                        <div className="space-y-4 p-4 rounded-lg bg-zinc-800 text-zinc-50">
                             <div className="space-y-2">
-                                <p className="text-xl font-acidBold">
+                                <p className="text-xl font-semibold ">
                                     Current Price
                                 </p>
                                 <div className="flex gap-5 items-center">
-                                    <p className="text-lg font-acidMedium">
-                                        {priceFormat} ETH
-                                    </p>
+                                    <p className="text-lg">{priceFormat} ETH</p>
                                     <p className="text-md">
                                         (${priceInUSD} USD)
                                     </p>
@@ -129,22 +145,19 @@ function MintModal({ isOpen, onClose, currentTrack }) {
                             </div>
 
                             <div className="space-y-2">
-                                <p className="text-xl font-acidBold">
+                                <p className="text-xl font-semibold">
                                     Contract Address
                                 </p>
-                                <div className="flex items-center justify-between bg-neutral p-3 rounded-lg text-neutral-content">
-                                    <p className="text-sm font-mono truncate">
+                                <div className="flex items-center justify-between bg-zinc-500 p-3 rounded-lg">
+                                    <p
+                                        className="text-sm font-mono truncate cursor-pointer"
+                                        onClick={handleCopy}
+                                    >
                                         {currentTrack.id}
                                     </p>
-                                    <Copy
-                                        className="cursor-pointer hover:text-gray-400 transition-colors"
-                                        onClick={handleCopy}
-                                        size={16}
-                                    />
                                 </div>
                             </div>
                         </div>
-
                         <div className="flex gap-4">
                             <RainbowButton
                                 onClick={handleMint}
@@ -154,7 +167,7 @@ function MintModal({ isOpen, onClose, currentTrack }) {
                             </RainbowButton>
                             <button
                                 onClick={onClose}
-                                className="flex-1 bg-error text-base-100 py-3 px-4 rounded-lg font-acidMedium hover:bg-error hover:bg-opacity-90 transition-colors"
+                                className="flex-1 bg-red-500 text-zinc-50 py-3 px-4 rounded-3xl hover:bg-red-600 hover:bg-opacity-90 transition-colors"
                             >
                                 Cancel
                             </button>

@@ -1,18 +1,18 @@
 import axios from "axios"
 import React, { createContext, useContext, useRef, useState } from "react"
-import { fetchNumberOfOwners } from "../Utils/FetchNumberOfOwners"
+import { fetchNumberOfOwners } from "../Utils/services/FetchNumberOfOwners"
 
 const MusicContext = createContext()
 
 function MusicProvider({ children }) {
     // For Music Player
-    const [currentTrack, setCurrentTrack] = useState(null)
+    const [currentTrack, setCurrentTrack] = useState(null) // Current track being played
     const [isPlaying, setIsPlaying] = useState(false)
-    const audioRef = useRef(new Audio())
+    const audioRef = useRef(new Audio()) // Reference to the audio player in MusicPlayer
 
     // For NFT Track Page
-    const [nftDetails, setNftDetails] = useState(null)
-    const [nftData, setNftData] = useState(null)
+    const [nftDetails, setNftDetails] = useState(null) // Details include address, name, price, uri, genre
+    const [nftData, setNftData] = useState(null) // Get metadata from the uri which includes image, audio, description, artist name, etc.
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
     const [numberOfOwners, setNumberOfOwners] = useState(null)
@@ -84,21 +84,15 @@ function MusicProvider({ children }) {
     }
 
     async function fetchExchangeRate(mintPrice) {
-        const url =
-            "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
-
-        const options = {
-            headers: {
-                accept: "application/json",
-                "x-cg-demo-api-key": import.meta.env.VITE_COINGECKO_API,
-            },
-        }
         try {
-            const response = await axios.get(url, options)
+            const response = await axios.post(
+                `${serverUrl}/nft/getExchangeRate`,
+                {
+                    mintPrice,
+                },
+            )
             const data = response.data
-            const exchangeRate = data.ethereum.usd
-            const usdPrice = parseFloat(mintPrice / 10 ** 18) * exchangeRate
-            setPriceInUSD(usdPrice.toFixed(2))
+            setPriceInUSD(data.usdPrice.toFixed(2))
         } catch (err) {
             setPriceInUSD("N/A")
         }
@@ -107,9 +101,11 @@ function MusicProvider({ children }) {
     async function fetchNftData(tokenURI) {
         if (tokenURI) {
             try {
-                const encodedUrl = encodeURIComponent(tokenURI)
-                const response = await axios.get(
-                    `${serverUrl}/getData?uri=${encodedUrl}`,
+                const response = await axios.post(
+                    `${serverUrl}/nft/nftMetadata`,
+                    {
+                        uri: tokenURI,
+                    },
                 )
                 const data = response.data
                 setNftData(data)
@@ -142,6 +138,7 @@ function MusicProvider({ children }) {
                 error,
                 numberOfOwners,
                 priceInUSD,
+                fetchExchangeRate,
                 fetchNftDetails,
             }}
         >

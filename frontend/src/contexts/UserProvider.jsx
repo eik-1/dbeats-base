@@ -20,7 +20,7 @@ function UserProvider({ children }) {
             }
         }
         fetch()
-    }, [])
+    }, [address, isConnected])
 
     async function fetchUser(walletAddress) {
         if (isConnected && address) {

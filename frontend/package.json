@@ -17,6 +17,8 @@
         "alchemy-sdk": "^3.4.2",
         "avvvatars-react": "^0.4.2",
         "axios": "^1.7.7",
+        "canvas-confetti": "^1.9.3",
+        "class-variance-authority": "^0.7.1",
         "eslint": "^8.57.0",
         "ethers": "^6.13.2",
         "framer-motion": "^11.15.0",
@@ -24,6 +26,7 @@
         "lucide-react": "^0.436.0",
         "pinata-web3": "^0.5.2",
         "react": "^18.3.1",
+        "react-confetti": "^6.4.0",
         "react-dom": "^18.3.1",
         "react-router-dom": "^6.26.1",
         "tailwind-merge": "^2.5.2"

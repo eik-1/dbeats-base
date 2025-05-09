@@ -43,13 +43,13 @@ function MusicPlayer() {
     }
 
     const handleProgressChange = (e) => {
-        const newTime = e.target.value
+        const newTime = parseFloat(e.target.value)
         setCurrentTime(newTime)
         seekTo(newTime)
     }
 
     const handleVolumeChange = (e) => {
-        const newVolume = e.target.value
+        const newVolume = parseFloat(e.target.value)
         setVolume(newVolume)
         setVolumeHere(newVolume)
     }
@@ -61,6 +61,9 @@ function MusicPlayer() {
     }
 
     if (!currentTrack) return null
+
+    const progressPercentage = duration > 0 ? (currentTime / duration) * 100 : 0
+    const volumePercentage = volumeHere * 100
 
     return (
         <div className="fixed bottom-0 left-0 right-0 text-zinc-50 p-4 flex justify-between items-center h-[110px]">
@@ -98,9 +101,9 @@ function MusicPlayer() {
                         value={currentTime}
                         onChange={handleProgressChange}
                         style={{
-                            background: `linear-gradient(to right, oklch(69.6% 0.17 162.48) ${(currentTime / duration) * 100}%, #E0E0E0 ${(currentTime / duration) * 100}%)`,
+                            background: `linear-gradient(to right, oklch(69.6% 0.17 162.48) ${progressPercentage}%, #E0E0E0 ${progressPercentage}%)`,
                         }}
-                        className="w-[32rem] h-2 bg-secondary rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none 
+                        className="w-[32rem] h-2 bg-zinc-50 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none 
                         [&::-webkit-slider-thumb]:w-4 
                         [&::-webkit-slider-thumb]:h-4 
                         [&::-webkit-slider-thumb]:bg-primary
@@ -130,7 +133,7 @@ function MusicPlayer() {
             </div>
             <div className="flex items-center justify-around mr-20">
                 <span className="text-secondary">
-                    <Volume2 size={20} fill="#7b92b2" />
+                    <Volume2 size={20} />
                 </span>
 
                 <input
@@ -141,7 +144,7 @@ function MusicPlayer() {
                     value={volumeHere}
                     onChange={handleVolumeChange}
                     style={{
-                        background: `linear-gradient(to right, oklch(69.6% 0.17 162.48) ${volumeHere * 100}%, #E0E0E0 ${volumeHere * 100}%)`,
+                        background: `linear-gradient(to right, oklch(69.6% 0.17 162.48) ${volumePercentage}%, #E0E0E0 ${volumePercentage}%)`,
                     }}
                     className="w-24 h-2 rounded-full appearance-none ml-2 cursor-pointer 
                         [&::-webkit-slider-thumb]:appearance-none 

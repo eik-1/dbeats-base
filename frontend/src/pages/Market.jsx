@@ -3,10 +3,12 @@ import React from "react"
 import { Link } from "react-router-dom"
 import NFTCard from "../components/NFTCard"
 
+const serverUrl = import.meta.env.VITE_SERVER_URL
+
 function Market() {
     async function handleFetchAllNFTs() {
         try {
-            const response = await fetch(`http://localhost:3000/nft/getAll`)
+            const response = await fetch(`${serverUrl}/nft/getAll`)
             const result = await response.json()
             return result
         } catch (err) {

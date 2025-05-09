@@ -1,7 +1,9 @@
+const serverUrl = import.meta.env.VITE_SERVER_URL
+
 export async function fetchNumberOfOwners(address) {
     if (address) {
         const response = await fetch(
-            `http://localhost:3000/numberOfOwners?address=${address}`,
+            `${serverUrl}/nft/numberOfOwners?address=${address}`,
         )
         const data = await response.json()
         console.log("number of owners", data)

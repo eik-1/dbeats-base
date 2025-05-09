@@ -3,14 +3,14 @@ import { useWeb3ModalAccount } from "@web3modal/ethers/react"
 import React, { useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 
-import { useUser } from "../contexts/UserProvider"
-import Button from "../components/ui/Button"
 import ProfileSongsListItem from "../components/ProfileSongsListItem"
+import Button from "../components/ui/Button"
+import { useUser } from "../contexts/UserProvider"
 import getArtistNfts from "../Utils/services/getArtistNfts"
 
 function Profile() {
     const { address, isConnected } = useWeb3ModalAccount()
-    const { user, fetchUser, applyForArtist } = useUser()
+    const { user, applyForArtist } = useUser()
     const navigate = useNavigate()
     let newAddress
 
@@ -23,16 +23,6 @@ function Profile() {
         queryFn: getArtistNfts,
         enabled: !!newAddress,
     })
-
-    useEffect(() => {
-        async function initializeUser() {
-            if (address) {
-                const newUser = await fetchUser(address)
-                console.log("Fetched user:", newUser)
-            }
-        }
-        initializeUser()
-    }, [isConnected, address])
 
     async function handleApply() {
         await applyForArtist()

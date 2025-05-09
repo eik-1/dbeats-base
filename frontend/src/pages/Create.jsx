@@ -56,20 +56,8 @@ export default function Create() {
     const [state, dispatch] = useReducer(reducer, initialState)
     const navigate = useNavigate()
 
-    // const [trackAddress, setTrackAddress] = useState("")
-
     const fileInputRef = useRef(null)
     const trackInputRef = useRef(null)
-
-    // useEffect(() => {
-    //     async function initializeUser() {
-    //         if (address) {
-    //             const newUser = await fetchUser(address)
-    //             console.log("Fetched user:", newUser)
-    //         }
-    //     }
-    //     initializeUser()
-    // }, [isConnected, address])
 
     // useEffect to check if all the fields are filled
     // and set isFormValid to true
@@ -143,8 +131,12 @@ export default function Create() {
                     },
                     body: JSON.stringify(musicNftDB),
                 })
+                console.log("Hello World!!!!")
 
-                if (!response.ok) {
+                const data = await response.json()
+                console.log("Response data:", data)
+
+                if (response.status !== 201) {
                     throw new Error(
                         `Failed to create music nft: ${response.statusText}`,
                     )
@@ -204,10 +196,10 @@ export default function Create() {
 
             // Proceed with minting
             const nftAddress = await proceedMinting(imageUrl, trackUrl)
+            console.log("NFT Address:", nftAddress)
 
             // On successful minting
-            if (nftAddress) {
-                console.log("Minting successful, NFT Address:", nftAddress)
+            if (String(nftAddress).startsWith("0x")) {
                 fileInputRef.current.value = ""
                 trackInputRef.current.value = ""
                 navigate(`/app/track/${nftAddress}`)
