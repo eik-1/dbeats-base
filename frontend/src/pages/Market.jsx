@@ -1,22 +1,10 @@
 import { useQuery } from "@tanstack/react-query"
 import React from "react"
-import { Link } from "react-router-dom"
 import NFTCard from "../components/NFTCard"
-
-const serverUrl = import.meta.env.VITE_SERVER_URL
+import { handleFetchAllNFTs } from "../Utils/services/fetchAllNfts"
+import { Spinner } from "../components/ui/Spinner"
 
 function Market() {
-    async function handleFetchAllNFTs() {
-        try {
-            const response = await fetch(`${serverUrl}/nft/getAll`)
-            const result = await response.json()
-            return result
-        } catch (err) {
-            console.error("Error fetching data:", err)
-            throw err
-        }
-    }
-
     const { data, status, error } = useQuery({
         queryKey: ["nfts"],
         queryFn: handleFetchAllNFTs,
@@ -35,37 +23,39 @@ function Market() {
 
     const groupedNFTs = data?.nfts ? groupByGenre(data.nfts) : {}
 
+    if (status === "pending") {
+        return (
+            <div className="flex justify-center items-center h-full w-full text-zinc-50">
+                <Spinner />
+            </div>
+        )
+    }
+
+    if (status === "error") {
+        return (
+            <div className="h-full flex justify-center items-center text-2xl text-zinc-50 font-semibold">
+                Error occurred querying the Subgraph: {error.message}
+            </div>
+        )
+    }
+
     return (
-        <div className="p-6 md:p-8 h-full">
-            {status === "pending" && (
-                <div className="flex justify-center items-center h-screen w-full">
-                    <span className="loading loading-spinner text-primary loading-lg"></span>
-                </div>
-            )}
-            {status === "error" && (
-                <div className="text-center text-lg text-error mt-8 font-medium">
-                    Error occurred querying the Subgraph: {error.message}
-                </div>
-            )}
+        <div className="p-8">
             {status === "success" && (
-                <div className="space-y-8">
+                <div className="flex flex-col gap-14 w-full">
                     {Object.entries(groupedNFTs).map(([genre, nfts]) => (
                         <div key={genre}>
-                            <h2 className="text-xl font-bold mb-4">{genre}</h2>
+                            <h2 className="text-2xl text-zinc-50 font-semibold mb-6">
+                                {genre}
+                            </h2>
                             <div className="flex flex-wrap gap-5">
                                 {nfts.map((nft) => (
-                                    <Link
-                                        to={`/app/track/${nft.address}`}
-                                        state={{ address: nft.address }}
-                                        key={nft.id}
-                                    >
-                                        <NFTCard
-                                            id={nft.id}
-                                            uri={nft.tokenURI}
-                                            price={nft.mintPrice}
-                                            genre={nft.genre}
-                                        />
-                                    </Link>
+                                    <NFTCard
+                                        id={nft.id}
+                                        uri={nft.tokenURI}
+                                        price={nft.mintPrice}
+                                        genre={nft.genre}
+                                    />
                                 ))}
                             </div>
                         </div>

@@ -1,12 +1,21 @@
 import { Pause, Play } from "lucide-react"
 import React, { useEffect, useState } from "react"
+import axios from "axios"
+
 import { useMusic } from "../contexts/MusicProvider"
+import { Link } from "react-router-dom"
+import { Spinner } from "./ui/Spinner"
+
+const serverUrl = import.meta.env.VITE_SERVER_URL
 
 function NFTCard({ id, uri, price, genre }) {
-    const [name, setName] = useState("")
-    const [imageUrl, setImageUrl] = useState("")
-    const [musicUrl, setMusicUrl] = useState("")
-    const [artist, setArtist] = useState("")
+    const initialState = {
+        name: "",
+        imageUrl: "",
+        musicUrl: "",
+        artist: "",
+    }
+    const [music, setMusic] = useState(initialState)
     const [loading, setLoading] = useState(true)
 
     const { currentTrack, isPlaying, play, pauseTrack } = useMusic()
@@ -14,14 +23,19 @@ function NFTCard({ id, uri, price, genre }) {
     useEffect(() => {
         async function fetchNftData() {
             try {
-                const response = await fetch(
-                    `http://localhost:3000/nft/nftMetadata?uri=${encodeURIComponent(uri)}`,
+                const response = await axios.post(
+                    `${serverUrl}/nft/nftMetadata`,
+                    { uri },
                 )
-                const data = await response.json()
-                setName(data.name)
-                setImageUrl(data.imageUrl)
-                setMusicUrl(data.animationUrl)
-                setArtist(data.attributes[0].value)
+                const data = response.data
+                // TODO
+                const music = {
+                    name: data.name,
+                    imageUrl: data.image, // Change this later to "data.image"
+                    musicUrl: data.animation_url, // Change this later to "data.animation_url"
+                    artist: data.attributes[0].value, // Change this later to "data.creator"
+                }
+                setMusic(music)
             } catch (error) {
                 console.error("Error fetching NFT data:", error)
             } finally {
@@ -35,37 +49,70 @@ function NFTCard({ id, uri, price, genre }) {
         if (currentTrack && currentTrack.id === id && isPlaying) {
             pauseTrack()
         } else {
-            play({ id, name, artist, musicUrl, imageUrl, price, genre })
+            play({
+                id,
+                name: music.name,
+                artist: music.artist,
+                musicUrl: music.musicUrl,
+                imageUrl: music.imageUrl,
+                price,
+                genre,
+            })
         }
     }
 
     if (loading) {
         return (
-            <div className="skeleton card w-[250px] h-[250px] overflow-hidden group"></div>
+            <div className="group w-[220px] h-[320px] bg-gradient-to-br from-white/15 to-white/5 backdrop-blur-lg rounded-2xl border border-white/20 p-4 text-zinc-50 flex flex-col shadow-lg transition-all duration-300 ease-in-out hover:shadow-xl hover:border-white/30 overflow-hidden">
+                <div className="w-full h-full rounded-lg flex items-center justify-center text-sm">
+                    <Spinner />
+                </div>
+            </div>
         )
     }
 
     return (
-        <div className="card w-[250px] h-[250px] overflow-hidden cursor-pointer group">
-            <img
-                src={imageUrl}
-                alt={name}
-                className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
-            />
-            <div className="absolute bottom-0 h-full w-full bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div className="absolute bottom-0 left-0 right-0 h-2/5 flex justify-between items-center gap-4 text-neutral-content opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <div className="font-bold p-4">
-                    <h1 className="text-lg text-neutral-content">{name}</h1>
-                    <h2>{artist}</h2>
+        <div className="group w-[220px] h-[320px] bg-gradient-to-br from-white/15 to-white/5 backdrop-blur-lg rounded-2xl border border-white/20 p-4 text-zinc-50 flex flex-col shadow-lg transition-all duration-300 ease-in-out hover:shadow-xl hover:border-white/30 overflow-hidden">
+            <Link to={`/app/track/${id}`} key={id}>
+                <div className="relative w-full h-[180px] mb-3">
+                    {music.imageUrl ? (
+                        <img
+                            src={music.imageUrl}
+                            alt={music.name || "NFT Image"}
+                            className="w-full h-full object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
+                        />
+                    ) : (
+                        <div className="w-full h-full rounded-lg flex items-center justify-center bg-black/30 text-white/50 text-sm">
+                            No Image Available
+                        </div>
+                    )}
+                    <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 group-hover:scale-105 transition-opacity transition-transform duration-300 rounded-lg flex items-center justify-center"></div>
                 </div>
+            </Link>
+
+            <div className="flex flex-col flex-grow overflow-hidden">
+                <Link to={`/app/track/${id}`} key={id}>
+                    <h3
+                        className="text-base font-semibold mb-1 truncate"
+                        title={music.name || "Unknown Title"}
+                    >
+                        {music.name || "Unknown Title"}
+                    </h3>
+                </Link>
+                <p
+                    className="text-sm text-zinc-50/70 mb-0 truncate"
+                    title={music.artist}
+                >
+                    {music.artist}
+                </p>
                 <button
-                    className="absolute top-1/2 left-[85%] transform -translate-x-1/2 -translate-y-1/2 bg-base-100 text-neutral rounded-full p-2"
+                    className="mt-auto bg-zinc-50/10 px-4 py-2 rounded-lg w-full hover:bg-zinc-50/20 transition-colors duration-300 flex items-center justify-center self-center"
                     onClick={handlePlayClick}
                 >
                     {currentTrack && currentTrack.id === id && isPlaying ? (
-                        <Pause size={23} fill="#000" />
+                        <Pause size={26} strokeWidth={1} />
                     ) : (
-                        <Play size={23} fill="#000" />
+                        <Play size={26} strokeWidth={1} />
                     )}
                 </button>
             </div>

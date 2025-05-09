@@ -32,7 +32,7 @@ function Sidebar() {
                         <SidebarItem
                             icon={<Music size={25} strokeWidth={2} />}
                             text="My Music"
-                            to="/my-music"
+                            to="/app/my-music"
                         />
                         <SidebarItem
                             icon={<User size={25} strokeWidth={2} />}
