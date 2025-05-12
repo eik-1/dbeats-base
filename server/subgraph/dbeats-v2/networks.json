@@ -1,0 +1,8 @@
+{
+  "arbitrum-sepolia": {
+    "DBeatsFactory": {
+      "address": "0xCbDB0736971657049a02007c503c70C571bd3970",
+      "startBlock": 87822675
+    }
+  }
+}

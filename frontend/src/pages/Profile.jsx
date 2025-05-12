@@ -14,14 +14,14 @@ function Profile() {
     const navigate = useNavigate()
     let newAddress
 
-    if (address) {
-        newAddress = address.toLowerCase()
-    }
+    // if (address) {
+    //     newAddress = address.toLowerCase()
+    // }
 
     const { data, status, error } = useQuery({
-        queryKey: ["nfts", newAddress],
+        queryKey: ["nfts", address],
         queryFn: getArtistNfts,
-        enabled: !!newAddress,
+        enabled: !!address,
     })
 
     async function handleApply() {
@@ -30,6 +30,8 @@ function Profile() {
     }
 
     if (!isConnected || !user) {
+        console.log(address)
+        console.log(user)
         return (
             <div className="text-center text-xl text-zinc-50 flex items-center justify-center h-full">
                 Please connect your wallet to view your profile.
@@ -89,7 +91,7 @@ function Profile() {
 
             {user.isArtist && (
                 <>
-                    <h1 className="text-3xl font-['Acid_Grotesk_Bold'] text-zinc-50 mt-5 mb-2.5">
+                    <h1 className="text-3xl text-zinc-50 mt-5 mb-2.5">
                         Popular Tracks
                     </h1>
                     <div>

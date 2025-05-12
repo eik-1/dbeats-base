@@ -1,0 +1,8 @@
+{
+  "base-sepolia": {
+    "DBeatsFactory": {
+      "address": "0x5Fc15416aB39c483fDB6Ebc24580513eeCEC6d1F",
+      "startBlock": 25422926
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "motion": "^12.8.0",
+    "react-use": "^17.6.0"
+  }
+}

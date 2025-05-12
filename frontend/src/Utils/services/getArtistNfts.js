@@ -5,7 +5,7 @@ export default async function getArtistNfts(artistAddress) {
         console.log("Fetching data for artistId:", artistAddress)
         try {
             const response = await fetch(
-                `${serverUrl}/userNfts?walletAddress=${artistAddress}`,
+                `${serverUrl}/nft/artistNfts?walletAddress=${artistAddress}`,
             )
             const result = await response.json()
             console.log("Response from server:", result)

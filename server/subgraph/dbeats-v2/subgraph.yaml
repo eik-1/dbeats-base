@@ -1,0 +1,29 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: DBeatsFactory
+    network: arbitrum-sepolia
+    source:
+      address: "0xCbDB0736971657049a02007c503c70C571bd3970"
+      abi: DBeatsFactory
+      startBlock: 87822675
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - NFT
+        - Artist
+        - Factory
+        - RoleGranted
+      abis:
+        - name: DBeatsFactory
+          file: ./abis/DBeatsFactory.json
+      eventHandlers:
+        - event: NewNFT(indexed address,address,string,string,string,uint256,string)
+          handler: handleNewNFT
+        - event: RoleGranted(indexed bytes32,indexed address,indexed address)
+          handler: handleRoleGranted
+      file: ./src/d-beats-factory.ts
