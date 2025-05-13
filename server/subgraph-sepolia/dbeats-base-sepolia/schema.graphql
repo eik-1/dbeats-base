@@ -1,41 +1,33 @@
-type NewNFT @entity(immutable: true) {
-  id: Bytes!
-  nftAddress: Bytes! # address
-  _artistAddress: Bytes! # address
-  _newTokenURI: String! # string
-  name: String! # string
-  symbol: String! # string
-  mintPrice: BigInt! # uint256
-  _genre: String! # string
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type NFT @entity(immutable: false) {
+  id: ID!
+  address: Bytes!
+  artist: Artist!
+  tokenURI: String!
+  name: String!
+  symbol: String!
+  mintPrice: BigInt!
+  genre: String!
+  createdAt: BigInt!
 }
 
-type OwnershipTransferred @entity(immutable: true) {
-  id: Bytes!
-  previousOwner: Bytes! # address
-  newOwner: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type Artist @entity(immutable: false) {
+  id: ID!
+  address: Bytes!
+  nfts: [NFT!]! @derivedFrom(field: "artist")
+  createdAt: BigInt!
 }
 
-type RoleAdminChanged @entity(immutable: true) {
-  id: Bytes!
-  role: Bytes! # bytes32
-  previousAdminRole: Bytes! # bytes32
-  newAdminRole: Bytes! # bytes32
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type Factory @entity(immutable: false) {
+  id: ID!
+  nftsCount: BigInt!
+  artistsCount: BigInt!
 }
 
-type RoleGranted @entity(immutable: true) {
-  id: Bytes!
-  role: Bytes! # bytes32
-  account: Bytes! # address
-  sender: Bytes! # address
+type RoleGranted @entity(immutable: false) {
+  id: ID!
+  role: Bytes!
+  account: Bytes!
+  sender: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -43,10 +35,4 @@ type RoleGranted @entity(immutable: true) {
 
 type RoleRevoked @entity(immutable: true) {
   id: Bytes!
-  role: Bytes! # bytes32
-  account: Bytes! # address
-  sender: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
 }

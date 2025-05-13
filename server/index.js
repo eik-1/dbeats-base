@@ -3,7 +3,6 @@ import axios from "axios";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-import { gql, request } from "graphql-request";
 import mongoose from "mongoose";
 dotenv.config();
 
@@ -63,9 +62,8 @@ app.get("/nftData", async (req, res) => {
     // Combine data
     const data = {
       name: nftData.name,
-      image: nftData.imageUrl,
-      artist: nftData.attributes[0].value,
-      numberOfOwners,
+      image: nftData.image_url,
+      artist: nftData.creator,
     };
 
     res.json(data);

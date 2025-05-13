@@ -4,6 +4,7 @@ dotenv.config();
 
 import {
   createMusicNFT,
+  getArtistNfts,
   getExchangeRate,
   getLandingPageNfts,
   getLikes,
@@ -14,7 +15,6 @@ import {
   isLiked,
   likeDislikeMusic,
 } from "../controllers/nftController.js";
-import getArtistNfts from "../../frontend/src/Utils/services/getArtistNfts.js";
 
 const router = express.Router();
 
@@ -22,7 +22,7 @@ const router = express.Router();
 router.get("/getAll", getNfts);
 router.post("/nftMetadata", getNftMetadata);
 router.get("/landingPageNfts", getLandingPageNfts);
-router.post("/getOne", getNftDetails);
+router.post("/getDetails", getNftDetails);
 router.post("/createNFT", createMusicNFT);
 router.post("/likeDislikeMusic", likeDislikeMusic);
 router.get("/likes", getLikes);

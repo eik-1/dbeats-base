@@ -180,6 +180,7 @@ export const getNftDetailsInternal = async (nftAddress) => {
 export const getNftDetails = async (req, res) => {
   const { nftAddress } = req.body;
   console.log("NFT Address: ", nftAddress);
+
   const query = gql`
     query GetNftDetails($address: String!) {
       nfts(where: { address: $address }) {
@@ -263,6 +264,7 @@ export const getExchangeRate = async (req, res) => {
 export const getNumberOfOwners = async (req, res) => {
   try {
     const { address } = req.query;
+    console.log("address is ", address);
     const owners = await alchemy.nft.getNftsForContract(address);
     const numberOfOwners = owners.nfts.length;
     res.json(numberOfOwners);
@@ -273,8 +275,8 @@ export const getNumberOfOwners = async (req, res) => {
 };
 
 export const getArtistNfts = async (req, res) => {
-  const { walletAddress } = req.query;
-  console.log("Wallet Address: ", walletAddress);
+  const walletAddress = req.query.walletAddress;
+  console.log("Extracted walletAddress:", walletAddress);
 
   const query = gql`
     query MyQuery($artistId: String!) {

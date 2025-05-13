@@ -1,4 +1,4 @@
-specVersion: 1.3.0
+specVersion: 1.2.0
 indexerHints:
   prune: auto
 schema:
@@ -16,23 +16,16 @@ dataSources:
       apiVersion: 0.0.9
       language: wasm/assemblyscript
       entities:
-        - NewNFT
-        - OwnershipTransferred
-        - RoleAdminChanged
+        - NFT
+        - Artist
+        - Factory
         - RoleGranted
-        - RoleRevoked
       abis:
         - name: DBeatsFactory
           file: ./abis/DBeatsFactory.json
       eventHandlers:
         - event: NewNFT(indexed address,address,string,string,string,uint256,string)
           handler: handleNewNFT
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
-        - event: RoleAdminChanged(indexed bytes32,indexed bytes32,indexed bytes32)
-          handler: handleRoleAdminChanged
         - event: RoleGranted(indexed bytes32,indexed address,indexed address)
           handler: handleRoleGranted
-        - event: RoleRevoked(indexed bytes32,indexed address,indexed address)
-          handler: handleRoleRevoked
       file: ./src/d-beats-factory.ts
