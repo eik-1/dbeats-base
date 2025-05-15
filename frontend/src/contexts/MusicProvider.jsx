@@ -1,6 +1,6 @@
 import axios from "axios"
 import React, { createContext, useContext, useRef, useState } from "react"
-import { fetchNumberOfOwners } from "../Utils/services/FetchNumberOfOwners"
+import fetchNumberOfOwners from "../Utils/services/fetchNumberOfOwners"
 
 const MusicContext = createContext()
 

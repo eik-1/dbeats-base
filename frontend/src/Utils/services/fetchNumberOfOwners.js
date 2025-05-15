@@ -1,6 +1,6 @@
 const serverUrl = import.meta.env.VITE_SERVER_URL
 
-export async function fetchNumberOfOwners(address) {
+export default async function fetchNumberOfOwners(address) {
     if (address) {
         const response = await fetch(
             `${serverUrl}/nft/numberOfOwners?address=${address}`,
