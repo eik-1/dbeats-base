@@ -1,7 +1,7 @@
 const hre = require("hardhat");
 
 async function main() {
-  const deploymentData = require('../ignition/deployments/chain-421614/deployed_addresses.json');
+  const deploymentData = require('../ignition/deployments/chain-8453/deployed_addresses.json');
 
   const contracts = {
     DBeatsPlatformWallet: deploymentData["MainModule#DBeatsPlatformWallet"],
@@ -10,7 +10,7 @@ async function main() {
     DBeatsFactory: deploymentData["MainModule#DBeatsFactory"],
   };
 
-  const owners = ["0x1ABc133C222a185fEde2664388F08ca12C208F76","0x143C4BEEf05eeB3eFb9062A96Af96C0564d3FBd4"];
+  const owners = ["0xb7E9eC6add9cbf3c0571dF5746e54d0aa23932f5","0x143C4BEEf05eeB3eFb9062A96Af96C0564d3FBd4"];
   const requiredConfirmations = 2;
   const initialFeePercentage = 10;
 

@@ -10,6 +10,7 @@
     "license": "ISC",
     "description": "",
     "dependencies": {
+        "@nomiclabs/hardhat-ethers": "^2.2.3",
         "@nomiclabs/hardhat-etherscan": "^3.1.8",
         "@openzeppelin/contracts": "^4.9.6",
         "dotenv": "^16.4.5",
