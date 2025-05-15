@@ -1,6 +1,6 @@
 import axios from "axios"
 import React, { useEffect, useState } from "react"
-import { fetchNumberOfOwners } from "../Utils/services/FetchNumberOfOwners"
+import fetchNumberOfOwners from "../Utils/services/fetchNumberOfOwners"
 
 export default function ProfileSongsListItem({ id, uri, mintprice, address }) {
     const [name, setName] = useState("")
