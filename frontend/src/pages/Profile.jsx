@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 import { useWeb3ModalAccount } from "@web3modal/ethers/react"
-import React, { useEffect } from "react"
+import React from "react"
 import { Link, useNavigate } from "react-router-dom"
 
 import ProfileSongsListItem from "../components/ProfileSongsListItem"
@@ -14,14 +14,14 @@ function Profile() {
     const navigate = useNavigate()
     let newAddress
 
-    // if (address) {
-    //     newAddress = address.toLowerCase()
-    // }
+    if (address) {
+        newAddress = address.toLowerCase()
+    }
 
     const { data, status, error } = useQuery({
-        queryKey: ["nfts", address],
-        queryFn: getArtistNfts,
-        enabled: !!address,
+        queryKey: ["nfts", newAddress],
+        queryFn: () => getArtistNfts(newAddress),
+        enabled: !!newAddress,
     })
 
     async function handleApply() {
@@ -31,7 +31,6 @@ function Profile() {
 
     if (!isConnected || !user) {
         console.log(address)
-        console.log(user)
         return (
             <div className="text-center text-xl text-zinc-50 flex items-center justify-center h-full">
                 Please connect your wallet to view your profile.

@@ -1,13 +1,12 @@
 import { BrowserProvider, ethers } from "ethers"
-import {
-    factoryABI,
-    factoryContractAddress,
-    platformPercentageFee,
-} from "../Utils/Config"
+import { factoryABI, factoryContractAddress } from "../Utils/Config"
 
 async function Mint(props) {
     console.log("mint props: ", props)
-
+    await window.ethereum.request({
+        method: "eth_requestAccounts",
+        params: [props.user.toLowerCase()],
+    })
     const provider = new BrowserProvider(window.ethereum)
     const signer = await provider.getSigner()
     const factoryContractInstanceWithSigner = new ethers.Contract(

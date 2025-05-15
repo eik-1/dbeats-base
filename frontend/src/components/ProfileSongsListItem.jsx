@@ -1,20 +1,30 @@
+import axios from "axios"
 import React, { useEffect, useState } from "react"
+import { fetchNumberOfOwners } from "../Utils/services/FetchNumberOfOwners"
 
 export default function ProfileSongsListItem({ id, uri, mintprice, address }) {
     const [name, setName] = useState("")
     const [numberOfOwners, setNumberOfOwners] = useState(0)
+    const [loading, setLoading] = useState(false)
+
+    const serverUrl = import.meta.env.VITE_SERVER_URL
 
     useEffect(() => {
         const fetchNftData = async () => {
             try {
-                const response = await fetch(
-                    `http://localhost:3000/nftData?uri=${encodeURIComponent(uri)}&address=${address}`,
+                setLoading(true)
+                const response = await axios.post(
+                    `${serverUrl}/nft/nftMetadata`,
+                    { uri },
                 )
-                const data = await response.json()
+                const data = response.data
                 setName(data.name)
-                setNumberOfOwners(data.numberOfOwners)
+                const numOwners = await fetchNumberOfOwners(address)
+                setNumberOfOwners(numOwners)
             } catch (error) {
                 console.error("Error fetching NFT data:", error)
+            } finally {
+                setLoading(false)
             }
         }
 
@@ -27,15 +37,23 @@ export default function ProfileSongsListItem({ id, uri, mintprice, address }) {
                 <p className="text-lg font-medium">{id}.</p>
                 <div className="flex justify-between w-full pl-[30px]">
                     <div className="flex gap-[60px] items-center w-full">
-                        <h1 className="flex-1 text-left text-lg font-semibold text-zinc-50">
-                            {name}
-                        </h1>
-                        <p className="flex-1 text-zinc-300 text-md text-left">
-                            Copies sold: {numberOfOwners}
-                        </p>
-                        <p className="flex-1 text-md text-left rounded-3xl bg-emerald-500 text-primary-foreground px-3 py-1 font-semibold max-w-fit">
-                            {mintprice / 10 ** 18} ETH
-                        </p>
+                        {loading ? (
+                            <div className="flex-1 text-left text-lg font-semibold text-zinc-50">
+                                Loading...
+                            </div>
+                        ) : (
+                            <>
+                                <h1 className="flex-1 text-left text-lg font-semibold text-zinc-50">
+                                    {name}
+                                </h1>
+                                <p className="flex-1 text-zinc-300 text-md text-left">
+                                    Copies sold: {numberOfOwners}
+                                </p>
+                                <p className="flex-1 text-md text-left rounded-3xl bg-emerald-500 text-primary-foreground px-3 py-1 font-semibold max-w-fit">
+                                    {mintprice / 10 ** 18} ETH
+                                </p>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

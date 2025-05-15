@@ -20,14 +20,6 @@ import MyMusic from "./pages/MyMusic"
 
 const projectId = import.meta.env.VITE_WALLETCONNECT_ID
 
-const mainnet = {
-    chainId: 1,
-    name: "Ethereum",
-    currency: "ETH",
-    explorerUrl: "https://etherscan.io",
-    rpcUrl: import.meta.env.VITE_ETH_MAINNET_RPC,
-}
-
 const base = {
     chainId: 8453,
     name: "Base",
@@ -40,11 +32,17 @@ const arbitrumSepolia = {
     currency: "ETH",
     rpcUrl: import.meta.env.VITE_ARB_SEPOLIA_RPC,
 }
+const baseSepolia = {
+    chainId: 84532,
+    name: "Base Sepolia",
+    currency: "ETH",
+    rpcUrl: import.meta.env.VITE_BASE_SEPOLIA_RPC,
+}
 
 const metadata = {
     name: "DBeats",
     description: "NFT Marketplace For Music",
-    url: "https://dbeats.xyz", // origin must match your domain & subdomain
+    url: "https://dbeats.xyz",
     icons: [],
 }
 
@@ -56,7 +54,7 @@ const ethersConfig = defaultConfig({
     defaultChainId: 1, // used for the Coinbase SDK
     auth: {
         email: true,
-        socials: ["google", "x", "apple", "farcaster"],
+        socials: ["google", "farcaster"],
         showWallets: true,
         walletFeatures: true,
     },
@@ -64,7 +62,7 @@ const ethersConfig = defaultConfig({
 
 createWeb3Modal({
     ethersConfig,
-    chains: [arbitrumSepolia, mainnet, base],
+    chains: [arbitrumSepolia, baseSepolia, base],
     projectId,
     enableAnalytics: true,
     themeMode: "light",

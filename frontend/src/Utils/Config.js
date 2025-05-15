@@ -1,5 +1,5 @@
 export const factoryContractAddress =
-    "0xCbDB0736971657049a02007c503c70C571bd3970"
+    "0x5Fc15416aB39c483fDB6Ebc24580513eeCEC6d1F"
 
 export const factoryABI = [
     {
@@ -17,6 +17,16 @@ export const factoryABI = [
         ],
         stateMutability: "nonpayable",
         type: "constructor",
+    },
+    {
+        inputs: [],
+        name: "Factory__CallerNotAdmin",
+        type: "error",
+    },
+    {
+        inputs: [],
+        name: "Factory__CallerNotArtist",
+        type: "error",
     },
     {
         anonymous: false,
@@ -164,33 +174,63 @@ export const factoryABI = [
     {
         inputs: [],
         name: "ADMIN_ROLE",
-        outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+        outputs: [
+            {
+                internalType: "bytes32",
+                name: "",
+                type: "bytes32",
+            },
+        ],
         stateMutability: "view",
         type: "function",
     },
     {
         inputs: [],
         name: "ARTIST_ROLE",
-        outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+        outputs: [
+            {
+                internalType: "bytes32",
+                name: "",
+                type: "bytes32",
+            },
+        ],
         stateMutability: "view",
         type: "function",
     },
     {
         inputs: [],
         name: "DEFAULT_ADMIN_ROLE",
-        outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+        outputs: [
+            {
+                internalType: "bytes32",
+                name: "",
+                type: "bytes32",
+            },
+        ],
         stateMutability: "view",
         type: "function",
     },
     {
-        inputs: [{ internalType: "address", name: "account", type: "address" }],
+        inputs: [
+            {
+                internalType: "address",
+                name: "account",
+                type: "address",
+            },
+        ],
         name: "addAdmin",
         outputs: [],
         stateMutability: "nonpayable",
         type: "function",
     },
     {
-        inputs: [{ internalType: "address", name: "account", type: "address" }],
+        inputs: [
+            {
+                internalType: "address",
+                name: "account",
+                type: "address",
+            },
+        ],
         name: "addArtist",
         outputs: [],
         stateMutability: "nonpayable",
@@ -198,8 +238,16 @@ export const factoryABI = [
     },
     {
         inputs: [
-            { internalType: "bytes32", name: "role", type: "bytes32" },
-            { internalType: "address", name: "account", type: "address" },
+            {
+                internalType: "bytes32",
+                name: "role",
+                type: "bytes32",
+            },
+            {
+                internalType: "address",
+                name: "account",
+                type: "address",
+            },
         ],
         name: "addUserToRole",
         outputs: [],
@@ -213,11 +261,31 @@ export const factoryABI = [
                 name: "_artistAddress",
                 type: "address",
             },
-            { internalType: "string", name: "_newTokenURI", type: "string" },
-            { internalType: "string", name: "name", type: "string" },
-            { internalType: "string", name: "symbol", type: "string" },
-            { internalType: "uint256", name: "mintPrice", type: "uint256" },
-            { internalType: "string", name: "_genre", type: "string" },
+            {
+                internalType: "string",
+                name: "_newTokenURI",
+                type: "string",
+            },
+            {
+                internalType: "string",
+                name: "name",
+                type: "string",
+            },
+            {
+                internalType: "string",
+                name: "symbol",
+                type: "string",
+            },
+            {
+                internalType: "uint256",
+                name: "mintPrice",
+                type: "uint256",
+            },
+            {
+                internalType: "string",
+                name: "_genre",
+                type: "string",
+            },
         ],
         name: "createNFT",
         outputs: [],
@@ -225,37 +293,81 @@ export const factoryABI = [
         type: "function",
     },
     {
-        inputs: [{ internalType: "address", name: "creator", type: "address" }],
+        inputs: [
+            {
+                internalType: "address",
+                name: "creator",
+                type: "address",
+            },
+        ],
         name: "getNFTsByCreator",
-        outputs: [{ internalType: "address[]", name: "", type: "address[]" }],
+        outputs: [
+            {
+                internalType: "address[]",
+                name: "",
+                type: "address[]",
+            },
+        ],
         stateMutability: "view",
         type: "function",
     },
     {
         inputs: [],
         name: "getPlatformFeePercentage",
-        outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+        outputs: [
+            {
+                internalType: "uint256",
+                name: "",
+                type: "uint256",
+            },
+        ],
         stateMutability: "view",
         type: "function",
     },
     {
-        inputs: [{ internalType: "bytes32", name: "role", type: "bytes32" }],
+        inputs: [
+            {
+                internalType: "bytes32",
+                name: "role",
+                type: "bytes32",
+            },
+        ],
         name: "getRoleAdmin",
-        outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+        outputs: [
+            {
+                internalType: "bytes32",
+                name: "",
+                type: "bytes32",
+            },
+        ],
         stateMutability: "view",
         type: "function",
     },
     {
         inputs: [],
         name: "getTokenCount",
-        outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+        outputs: [
+            {
+                internalType: "uint256",
+                name: "",
+                type: "uint256",
+            },
+        ],
         stateMutability: "view",
         type: "function",
     },
     {
         inputs: [
-            { internalType: "bytes32", name: "role", type: "bytes32" },
-            { internalType: "address", name: "account", type: "address" },
+            {
+                internalType: "bytes32",
+                name: "role",
+                type: "bytes32",
+            },
+            {
+                internalType: "address",
+                name: "account",
+                type: "address",
+            },
         ],
         name: "grantRole",
         outputs: [],
@@ -264,35 +376,75 @@ export const factoryABI = [
     },
     {
         inputs: [
-            { internalType: "bytes32", name: "role", type: "bytes32" },
-            { internalType: "address", name: "account", type: "address" },
+            {
+                internalType: "bytes32",
+                name: "role",
+                type: "bytes32",
+            },
+            {
+                internalType: "address",
+                name: "account",
+                type: "address",
+            },
         ],
         name: "hasRole",
-        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+        outputs: [
+            {
+                internalType: "bool",
+                name: "",
+                type: "bool",
+            },
+        ],
         stateMutability: "view",
         type: "function",
     },
     {
         inputs: [
-            { internalType: "address", name: "", type: "address" },
-            { internalType: "uint256", name: "", type: "uint256" },
+            {
+                internalType: "address",
+                name: "",
+                type: "address",
+            },
+            {
+                internalType: "uint256",
+                name: "",
+                type: "uint256",
+            },
         ],
         name: "nftsByCreator",
-        outputs: [{ internalType: "address", name: "", type: "address" }],
+        outputs: [
+            {
+                internalType: "address",
+                name: "",
+                type: "address",
+            },
+        ],
         stateMutability: "view",
         type: "function",
     },
     {
         inputs: [],
         name: "owner",
-        outputs: [{ internalType: "address", name: "", type: "address" }],
+        outputs: [
+            {
+                internalType: "address",
+                name: "",
+                type: "address",
+            },
+        ],
         stateMutability: "view",
         type: "function",
     },
     {
         inputs: [],
         name: "platformWalletAddress",
-        outputs: [{ internalType: "address", name: "", type: "address" }],
+        outputs: [
+            {
+                internalType: "address",
+                name: "",
+                type: "address",
+            },
+        ],
         stateMutability: "view",
         type: "function",
     },
@@ -305,8 +457,16 @@ export const factoryABI = [
     },
     {
         inputs: [
-            { internalType: "bytes32", name: "role", type: "bytes32" },
-            { internalType: "address", name: "account", type: "address" },
+            {
+                internalType: "bytes32",
+                name: "role",
+                type: "bytes32",
+            },
+            {
+                internalType: "address",
+                name: "account",
+                type: "address",
+            },
         ],
         name: "renounceRole",
         outputs: [],
@@ -315,8 +475,16 @@ export const factoryABI = [
     },
     {
         inputs: [
-            { internalType: "bytes32", name: "role", type: "bytes32" },
-            { internalType: "address", name: "account", type: "address" },
+            {
+                internalType: "bytes32",
+                name: "role",
+                type: "bytes32",
+            },
+            {
+                internalType: "address",
+                name: "account",
+                type: "address",
+            },
         ],
         name: "revokeRole",
         outputs: [],
@@ -325,16 +493,30 @@ export const factoryABI = [
     },
     {
         inputs: [
-            { internalType: "bytes4", name: "interfaceId", type: "bytes4" },
+            {
+                internalType: "bytes4",
+                name: "interfaceId",
+                type: "bytes4",
+            },
         ],
         name: "supportsInterface",
-        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+        outputs: [
+            {
+                internalType: "bool",
+                name: "",
+                type: "bool",
+            },
+        ],
         stateMutability: "view",
         type: "function",
     },
     {
         inputs: [
-            { internalType: "address", name: "newOwner", type: "address" },
+            {
+                internalType: "address",
+                name: "newOwner",
+                type: "address",
+            },
         ],
         name: "transferOwnership",
         outputs: [],
@@ -391,6 +573,21 @@ export const dbeatsNftABI = [
         ],
         stateMutability: "nonpayable",
         type: "constructor",
+    },
+    {
+        inputs: [],
+        name: "DBeatsNFT__InsufficientEth",
+        type: "error",
+    },
+    {
+        inputs: [],
+        name: "DBeatsNFT__OnlyArtist",
+        type: "error",
+    },
+    {
+        inputs: [],
+        name: "DBeatsNFT__QuantityLessThanZero",
+        type: "error",
     },
     {
         anonymous: false,
@@ -922,6 +1119,5 @@ export const dbeatsNftABI = [
         type: "function",
     },
 ]
-
 
 export const serverUrl = "http://localhost:3000"

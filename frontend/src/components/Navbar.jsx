@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom"
 
 import { useUser } from "../contexts/UserProvider"
 import ConnectButton from "./ui/ConnectButton"
-import logo from "../assets/logo.png"
 import Logo from "./Logo"
 
 function Navbar() {

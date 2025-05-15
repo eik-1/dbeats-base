@@ -14,8 +14,12 @@ function LandingPage() {
             const url = import.meta.env.VITE_SERVER_URL
             const res = await fetch(`${url}/nft/landingPageNfts`)
             const data = await res.json()
-            setLandingPageNfts(data.nftMetadata)
-            setAddresses(data.nftDetails.map((nft) => nft.address))
+            setLandingPageNfts(data.nftMetadata || [])
+            setAddresses(
+                Array.isArray(data.nftDetails)
+                    ? data.nftDetails.map((nft) => nft.address)
+                    : [],
+            )
         }
         fetchLandingPageNfts()
     }, [])

@@ -1,14 +1,16 @@
 import { useWeb3Modal, useWeb3ModalAccount } from "@web3modal/ethers/react"
 import Avvvatars from "avvvatars-react"
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 
 import { useUser } from "../../contexts/UserProvider"
 import Button from "./Button"
+import { useNavigate } from "react-router-dom"
 
 export default function ConnectButton() {
     const { open } = useWeb3Modal()
     const { isConnected, address } = useWeb3ModalAccount()
     const { createUser, fetchUser } = useUser()
+    const navigate = useNavigate()
 
     useEffect(() => {
         async function initializeUser() {
@@ -26,6 +28,7 @@ export default function ConnectButton() {
                     }
                     await createUser(newUser)
                 }
+                navigate("/app/profile")
             }
         }
         initializeUser()

@@ -52,17 +52,15 @@ function MusicProvider({ children }) {
     async function fetchNftDetails(address) {
         if (address) {
             try {
-                const response = await fetch(`${serverUrl}/nft/getOne`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ nftAddress: address }),
-                })
-                if (!response.ok) {
+                const response = await axios.post(
+                    `${serverUrl}/nft/getDetails`,
+                    { nftAddress: address },
+                )
+
+                if (response.status !== 200) {
                     throw new Error("Network response was not ok")
                 }
-                const data = await response.json()
+                const data = response.data
                 setNftDetails(data)
 
                 const owners = await fetchNumberOfOwners(address)
@@ -107,6 +105,9 @@ function MusicProvider({ children }) {
                         uri: tokenURI,
                     },
                 )
+                if (response.status !== 200) {
+                    throw new Error("Network response was not ok")
+                }
                 const data = response.data
                 setNftData(data)
             } catch (err) {

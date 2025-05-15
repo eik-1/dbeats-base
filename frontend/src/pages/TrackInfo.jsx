@@ -1,6 +1,6 @@
 import { Copy, Heart, Pause, Play, Tag, User } from "lucide-react"
 import { useEffect, useState } from "react"
-import { useLocation } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 
 import { useWeb3ModalAccount } from "@web3modal/ethers/react"
 import MintModal from "../components/MintModal"
@@ -59,12 +59,13 @@ function TrackInfo() {
         ) {
             pauseTrack()
         } else {
+            // This is for the music player display
             const trackData = {
                 id: nftDetails.nfts[0].address,
                 name: nftDetails.nfts[0].name,
-                artist: nftData.attributes[0].value,
-                musicUrl: nftData.animationUrl,
-                imageUrl: nftData.imageUrl,
+                artist: nftData.creator,
+                musicUrl: nftData.animation_url,
+                imageUrl: nftData.image,
                 price: nftDetails.nfts[0].mintPrice,
                 genre: nftDetails.nfts[0].genre,
             }
@@ -115,7 +116,7 @@ function TrackInfo() {
                         <div className="relative aspect-square bg-muted rounded-lg overflow-hidden">
                             <img
                                 className="w-full h-full object-cover"
-                                src={nftData.imageUrl}
+                                src={nftData.image}
                                 alt={nftData.name}
                             />
                             <button
@@ -133,9 +134,11 @@ function TrackInfo() {
                         <div className="space-y-6">
                             <div className="flex items-center gap-2">
                                 <User size={24} />
-                                <span className="text-2xl cursor-pointer">
-                                    {nftData.attributes[0].value}
-                                </span>
+                                <Link to={`/app/${nftData.creator}`}>
+                                    <span className="text-2xl cursor-pointer hover:text-emerald-500 transition-colors">
+                                        {nftData.creator}
+                                    </span>
+                                </Link>
                             </div>
 
                             <div className="flex items-center gap-2 text-zinc-50 rounded-full bg-emerald-900 px-3 py-1 w-fit">
@@ -193,8 +196,8 @@ function TrackInfo() {
                                 currentTrack={{
                                     id: nftDetails.nfts[0].address,
                                     name: nftDetails.nfts[0].name,
-                                    artist: nftData.attributes[0].value,
-                                    imageUrl: nftData.imageUrl,
+                                    artist: nftData.creator,
+                                    imageUrl: nftData.image,
                                     price: nftDetails.nfts[0].mintPrice,
                                     genre: nftDetails.nfts[0].genre,
                                 }}

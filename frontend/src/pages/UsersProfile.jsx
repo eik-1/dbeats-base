@@ -1,123 +1,132 @@
 import React, { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useLocation } from "react-router-dom"
 import { Link } from "react-router-dom"
 import { useUser } from "../contexts/UserProvider"
 import ProfileSongsListItem from "../components/ProfileSongsListItem"
+import { Spinner } from "../components/ui/Spinner"
+import getNFTDetails from "../Utils/services/getNFTDetails"
+import getArtistNfts from "../Utils/services/getArtistNfts"
 
 function UsersProfile() {
+    const location = useLocation()
+    const username = location.pathname.substring(5)
+
     const { searchUsers } = useUser()
+
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
-    const [nftData, setNftData] = useState(null)
-    const [queryStatus, setQueryStatus] = useState("idle")
-    const [queryError, setQueryError] = useState(null)
-
-    const { name } = useParams()
-    const serverUrl = import.meta.env.VITE_SERVER_URL
+    const [nfts, setNfts] = useState([])
+    const [nftDetailsLoading, setNftDetailsLoading] = useState(false)
 
     useEffect(() => {
-        if (user && user.walletAddress && user.isArtist) {
-            setQueryStatus("pending")
-            fetch(`${serverUrl}/userNfts?walletAddress=${user.walletAddress}`)
-                .then((response) => response.json())
-                .then((result) => {
-                    setNftData(result)
-                    setQueryStatus("success")
-                })
-                .catch((err) => {
-                    console.error("Error fetching data:", err)
-                    setQueryError(err)
-                    setQueryStatus("error")
-                })
-        }
-    }, [user])
-
-    useEffect(() => {
-        async function initializeUser() {
+        async function fetchUser() {
             setLoading(true)
-            const newUser = await searchUsers(name)
-            setUser(newUser[0])
-            setLoading(false)
+            try {
+                const newUser = await searchUsers(username)
+                setUser(newUser)
+                if (newUser && newUser.walletAddress && newUser.isArtist) {
+                    setNftDetailsLoading(true)
+                    const nftsFetched = await getArtistNfts(
+                        newUser.walletAddress.toLowerCase(),
+                    )
+                    const nfts = nftsFetched.artist.nfts
+                    setNfts(nfts)
+                } else {
+                    setNfts([])
+                }
+                setNftDetailsLoading(false)
+            } catch (err) {
+                console.error("Error fetching user:", err)
+                setUser(null)
+                setNfts([])
+            } finally {
+                setLoading(false)
+            }
         }
-        initializeUser()
-    }, [name, searchUsers])
+        fetchUser()
+    }, [username, searchUsers])
 
     if (loading) {
-        return <div>Loading...</div>
+        return (
+            <div className="text-center text-xl text-zinc-50 flex items-center justify-center h-full">
+                <Spinner />
+            </div>
+        )
     }
 
     if (!user) {
-        return <div>User not found</div>
+        return (
+            <div className="text-center text-xl text-zinc-50 flex items-center justify-center h-full">
+                User Not Found
+            </div>
+        )
     }
 
     return (
-        <div className="p-8 box-border">
+        <div className="p-8">
             <div className="flex items-center justify-between mb-8">
-                <img
-                    src={user.profilePicture}
-                    alt={user.name}
-                    className="w-[150px] h-[150px] rounded-[10%] object-cover"
-                />
+                <div className="rounded-full w-36 h-36">
+                    <img
+                        src={user.profilePicture}
+                        alt={user.name}
+                        className="object-cover w-36 h-36 rounded-full"
+                    />
+                </div>
+
                 <div className="flex-grow ml-8">
-                    <h1 className="text-4xl mb-2 font-['Acid_Grotesk_Bold'] text-[#424242]">
+                    <h1 className="text-5xl font-semibold mb-2 text-zinc-50">
                         {user.name}
                     </h1>
-                    <p className="text-base text-[#666] font-['Acid_Grotesk_Regular']">
+                    <p className="text-base text-zinc-100">
                         {user.walletAddress}
                     </p>
                 </div>
-                <div className="text-[#F5F5F5] flex justify-end">
-                    <button className="bg-[#3CB4AC] border-none px-6 py-3 rounded cursor-pointer text-base transition-colors duration-300 ease-in-out mr-8 hover:bg-[#2A7D77]">
-                        Follow
-                    </button>
+            </div>
+            {user.about && (
+                <div className="p-8">
+                    <h2 className="text-2xl mb-4 text-zinc-50 font-semibold">
+                        About
+                    </h2>
+                    <p className="text-zinc-50 leading-relaxed">{user.about}</p>
                 </div>
-            </div>
-            <div className="bg-white rounded-lg p-8 shadow-md">
-                <h2 className="text-2xl mb-4 font-['Acid_Grotesk_Bold'] text-[#424242]">
-                    About
-                </h2>
-                <p className="text-[#424242] leading-relaxed">{user.about}</p>
-            </div>
-            <h1 className="text-3xl font-['Acid_Grotesk_Bold'] text-[#424242] mt-5 mb-2.5">
-                Tracks Created
-            </h1>
-            <div>
-                {queryStatus === "pending" && (
-                    <div className="text-center text-xl text-[#424242] mt-8 font-['Acid_Grotesk_Medium']">
-                        Loading...
-                    </div>
-                )}
-                {queryStatus === "error" && (
-                    <div className="text-center text-xl text-[#424242] mt-8 font-['Acid_Grotesk_Medium']">
-                        Error occurred querying the server: {queryError.message}
-                    </div>
-                )}
-                {queryStatus === "success" && (
-                    <div className="mt-5 w-full flex flex-col gap-4 items-center">
-                        {nftData.artist ? (
-                            nftData.artist.nfts.map((nft) => (
-                                <Link
-                                    to={`/track/${nft.address}`}
-                                    state={{ address: nft.address }}
-                                    key={nft.address}
-                                    className="mt-5 w-full flex flex-col gap-4 items-center"
-                                >
-                                    <ProfileSongsListItem
-                                        key={nft.tokenURI}
-                                        uri={nft.tokenURI}
-                                        mintprice={nft.mintPrice}
-                                        address={nft.address}
-                                    />
-                                </Link>
-                            ))
+            )}
+
+            {user?.isArtist && (
+                <>
+                    <h1 className="text-3xl text-zinc-50 mt-5 mb-2.5">
+                        Popular Tracks
+                    </h1>
+                    <div>
+                        {nftDetailsLoading ? (
+                            <div className="text-center text-xl text-zinc-50 mt-8">
+                                <Spinner />
+                            </div>
+                        ) : nfts.length > 0 ? (
+                            <div className="w-full flex flex-col gap-1 items-start justify-start">
+                                {nfts.map((nft, index) => (
+                                    <Link
+                                        to={`/app/track/${nft.address}`}
+                                        state={{ address: nft.address }}
+                                        key={nft.address}
+                                        className="w-full flex flex-col gap-4"
+                                    >
+                                        <ProfileSongsListItem
+                                            id={index + 1}
+                                            uri={nft.tokenURI}
+                                            mintprice={nft.mintPrice}
+                                            address={nft.address}
+                                        />
+                                    </Link>
+                                ))}
+                            </div>
                         ) : (
-                            <div className="text-center text-xl text-[#424242] mt-8 font-['Acid_Grotesk_Medium']">
-                                No artist data found for the given address.
+                            <div className="text-center text-xl text-zinc-50 mt-8">
+                                No NFTs found
                             </div>
                         )}
                     </div>
-                )}
-            </div>
+                </>
+            )}
         </div>
     )
 }

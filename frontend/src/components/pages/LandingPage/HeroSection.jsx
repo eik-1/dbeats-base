@@ -5,8 +5,8 @@ import musicnote from "../../../assets/music.png"
 
 function HeroSection() {
     const navbarHeightPadding = "pt-24 md:pt-48"
-    const videoUrl =
-        "https://res.cloudinary.com/doac8yyie/video/upload/f_auto:video,q_auto/musicnote_myp7yb"
+    // const videoUrl =
+    //     "https://res.cloudinary.com/doac8yyie/video/upload/f_auto:video,q_auto/musicnote_myp7yb"
 
     return (
         <div className="min-h-[100vh] text-white relative p-8 md:p-32 md:pt-8 overflow-hidden">
