@@ -3,7 +3,7 @@ const { buildModule } = require('@nomicfoundation/hardhat-ignition/modules')
 module.exports = buildModule('MainModule', (m) => {
     // Deploy PlatformWallet
     const owners = [
-        '0x1ABc133C222a185fEde2664388F08ca12C208F76',
+        '0xb7E9eC6add9cbf3c0571dF5746e54d0aa23932f5',
         '0x143C4BEEf05eeB3eFb9062A96Af96C0564d3FBd4',
     ]
     const requiredConfirmations = 2

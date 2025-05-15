@@ -1,6 +1,6 @@
 {
-  "MainModule#DBeatsPlatformWallet": "0x418bed75EfB07E9Fb2C3f9fCE5e9e9cc57996497",
-  "MainModule#FeeManager": "0xBC6A39207667e427Db531c5205201498456DC653",
-  "MainModule#DBeatsFactory": "0x5Fc15416aB39c483fDB6Ebc24580513eeCEC6d1F",
-  "MainModule#Platform": "0x7A1E6DCA2b9Cc752D3Ee4cf87A9879E1A8bB3c9B"
+  "MainModule#DBeatsPlatformWallet": "0x8C81391a6598803Dd47195B90Ee2280635D1de0b",
+  "MainModule#FeeManager": "0x03f8d1916e0886c2Ab9Fa17A0632580eBfDbc808",
+  "MainModule#DBeatsFactory": "0x49Ae3a34D77dB0Ad6bB361549AC8174971099695",
+  "MainModule#Platform": "0x3fDeb65b20348Ec0f234AF98E0fdC7107Edd84a2"
 }
