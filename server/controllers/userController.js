@@ -25,7 +25,7 @@ export const getUsersByName = async (req, res) => {
         .status(404)
         .json({ message: "No users found with the given name prefix" });
     }
-    res.json(users);
+    res.json(users[0]);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }

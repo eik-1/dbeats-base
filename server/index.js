@@ -12,11 +12,10 @@ import userRouter from "./routes/users.js";
 const app = express();
 
 const port = 3000;
-const url = process.env.SUBGRAPH_URL;
 
 const settings = {
   apiKey: process.env.ALCHEMY_API_KEY,
-  network: Network.ARB_SEPOLIA,
+  network: Network.BASE_SEPOLIA,
 };
 
 export const alchemy = new Alchemy(settings);

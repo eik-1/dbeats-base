@@ -179,7 +179,6 @@ export const getNftDetailsInternal = async (nftAddress) => {
 
 export const getNftDetails = async (req, res) => {
   const { nftAddress } = req.body;
-  console.log("NFT Address: ", nftAddress);
 
   const query = gql`
     query GetNftDetails($address: String!) {
