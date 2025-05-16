@@ -28,7 +28,6 @@ export default function ConnectButton() {
                     }
                     await createUser(newUser)
                 }
-                navigate("/app/profile")
             }
         }
         initializeUser()
