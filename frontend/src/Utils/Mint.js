@@ -5,7 +5,6 @@ async function Mint(props) {
     console.log("mint props: ", props)
     await window.ethereum.request({
         method: "eth_requestAccounts",
-        params: [props.user.toLowerCase()],
     })
     const provider = new BrowserProvider(window.ethereum)
     const signer = await provider.getSigner()
@@ -66,7 +65,6 @@ async function Mint(props) {
             throw new Error("NewNFT event not found in transaction receipt")
         }
 
-
         const {
             nftAddress,
             _artistAddress: artistAddress,
@@ -75,7 +73,7 @@ async function Mint(props) {
             symbol,
             mintPrice,
             _genre: genre,
-            maxMintLimit
+            maxMintLimit,
         } = newNFTEvent.args
 
         const eventData = {
@@ -93,6 +91,9 @@ async function Mint(props) {
         return eventData
     } catch (error) {
         console.log("error: ", error)
+        if (error.data === "0x140870e4") {
+            throw new Error("You are not an artist")
+        }
         throw error
     }
 }

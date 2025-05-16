@@ -21,7 +21,7 @@ function AdminPage() {
             if (isConnected && address) {
                 try {
                     const provider = new ethers.JsonRpcProvider(
-                        import.meta.env.VITE_BASE_SEPOLIA_RPC,
+                        import.meta.env.VITE_BASE_RPC,
                     )
                     const factoryContractInstance = new ethers.Contract(
                         factoryContractAddress,
