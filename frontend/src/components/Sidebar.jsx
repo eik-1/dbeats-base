@@ -20,7 +20,7 @@ function Sidebar() {
                 <SidebarItem
                     icon={<Home size={25} strokeWidth={2} />}
                     text="Home"
-                    to="/app"
+                    to="/app/market"
                 />
                 <SidebarItem
                     icon={<Compass size={25} strokeWidth={2} />}

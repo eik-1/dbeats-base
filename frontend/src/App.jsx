@@ -62,7 +62,7 @@ const ethersConfig = defaultConfig({
 
 createWeb3Modal({
     ethersConfig,
-    chains: [arbitrumSepolia, baseSepolia, base],
+    chains: [base],
     projectId,
     enableAnalytics: true,
     themeMode: "light",

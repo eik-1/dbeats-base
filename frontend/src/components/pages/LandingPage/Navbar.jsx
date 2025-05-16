@@ -43,7 +43,7 @@ export default function Navbar() {
                 >
                     How it works
                 </Link>
-                <Link to="/app">
+                <Link to="/app/market">
                     <button className={buttonClasses}>
                         <span>Launch App</span>
                         <ArrowRight size={16} />
