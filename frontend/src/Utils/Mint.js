@@ -24,6 +24,8 @@ async function Mint(props) {
                 props.symbol,
                 props.price,
                 props.genre,
+                // props.maxMintLimit,
+                0,
             )
 
         const tx = await factoryContractInstanceWithSigner.createNFT(
@@ -33,6 +35,8 @@ async function Mint(props) {
             props.symbol,
             props.price,
             props.genre,
+            // props.maxMintLimit,
+            0,
             {
                 gasLimit: gasEstimate,
             },
@@ -62,6 +66,7 @@ async function Mint(props) {
             throw new Error("NewNFT event not found in transaction receipt")
         }
 
+
         const {
             nftAddress,
             _artistAddress: artistAddress,
@@ -70,6 +75,7 @@ async function Mint(props) {
             symbol,
             mintPrice,
             _genre: genre,
+            maxMintLimit
         } = newNFTEvent.args
 
         const eventData = {
@@ -80,6 +86,7 @@ async function Mint(props) {
             symbol,
             mintPrice: mintPrice.toString(),
             genre,
+            maxMintLimit: maxMintLimit.toString(),
         }
 
         console.log("NewNFT Event Data:", eventData)
