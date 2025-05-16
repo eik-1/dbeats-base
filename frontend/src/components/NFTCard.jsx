@@ -5,6 +5,7 @@ import axios from "axios"
 import { useMusic } from "../contexts/MusicProvider"
 import { Link } from "react-router-dom"
 import { Spinner } from "./ui/Spinner"
+// import { start } from "repl"
 
 const serverUrl = import.meta.env.VITE_SERVER_URL
 
@@ -34,6 +35,12 @@ function NFTCard({ id, uri, price, genre }) {
                     imageUrl: data.image, // Change this later to "data.image"
                     musicUrl: data.animation_url, // Change this later to "data.animation_url"
                     artist: data.attributes[0].value, // Change this later to "data.creator"
+                }
+                if(music.imageUrl.startsWith("ipfs://")) {
+                    music.imageUrl = music.imageUrl.replace("ipfs://", "https://ipfs.io/ipfs/")
+                }
+                if(music.musicUrl.startsWith("ipfs://")) {
+                    music.musicUrl = music.musicUrl.replace("ipfs://", "https://ipfs.io/ipfs/")
                 }
                 setMusic(music)
             } catch (error) {
