@@ -1,0 +1,8 @@
+{
+  "base": {
+    "DBeatsFactory": {
+      "address": "0x6c9884fA54bc935050839aD2dA1AC3d08fe71e11",
+      "startBlock": 30252202
+    }
+  }
+}
