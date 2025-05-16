@@ -21,6 +21,8 @@ function NFTCard({ id, uri, price, genre }) {
 
     const { currentTrack, isPlaying, play, pauseTrack } = useMusic()
 
+    const pinataGateway = import.meta.env.VITE_PINATA_GATEWAY_URL
+
     useEffect(() => {
         async function fetchNftData() {
             try {
@@ -36,11 +38,17 @@ function NFTCard({ id, uri, price, genre }) {
                     musicUrl: data.animation_url, // Change this later to "data.animation_url"
                     artist: data.attributes[0].value, // Change this later to "data.creator"
                 }
-                if(music.imageUrl.startsWith("ipfs://")) {
-                    music.imageUrl = music.imageUrl.replace("ipfs://", "https://ipfs.io/ipfs/")
+                if (music.imageUrl.startsWith("ipfs://")) {
+                    music.imageUrl = music.imageUrl.replace(
+                        "ipfs://",
+                        `https://${pinataGateway}/ipfs/`,
+                    )
                 }
-                if(music.musicUrl.startsWith("ipfs://")) {
-                    music.musicUrl = music.musicUrl.replace("ipfs://", "https://ipfs.io/ipfs/")
+                if (music.musicUrl.startsWith("ipfs://")) {
+                    music.musicUrl = music.musicUrl.replace(
+                        "ipfs://",
+                        `https://${pinataGateway}/ipfs/`,
+                    )
                 }
                 setMusic(music)
             } catch (error) {
