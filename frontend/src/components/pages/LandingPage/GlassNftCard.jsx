@@ -11,21 +11,16 @@ const GlassNftCard = ({ nft, address }) => {
     }
 
     const getDisplayImageUrl = (nftData) => {
-        let url = nftData.imageUrl || nftData.image || ""
-        if (url.startsWith("ipfs://")) {
-            return `https://ipfs.io/ipfs/${url.substring(7)}`
+        let uri = nftData.image || ""
+        const pinataGateway = import.meta.env.VITE_PINATA_GATEWAY_URL
+        if (uri && !uri.startsWith("https://")) {
+            uri = uri.replace("ipfs://", "")
+            uri = `https://${pinataGateway}/ipfs/${uri}`
         }
-        if (url && !url.startsWith("http://") && !url.startsWith("https://")) {
-            return `https://${url}`
-        }
-        return url
+        return uri
     }
 
     const imageUrl = getDisplayImageUrl(nft)
-    const artistAttribute = nft.attributes?.find(
-        (attr) => attr.trait_type === "Artist Name",
-    )
-    const artistName = artistAttribute?.value || "Unknown Artist"
 
     return (
         <Link to={`/app/track/${address}`}>
@@ -42,7 +37,7 @@ const GlassNftCard = ({ nft, address }) => {
                             No Image Available
                         </div>
                     )}
-                    <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg flex items-center justify-center"></div>
+                    <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 group-hover:scale-105 transition-opacity transition-transform duration-300 rounded-lg flex items-center justify-center"></div>
                 </div>
 
                 <div className="flex flex-col flex-grow overflow-hidden">
@@ -54,9 +49,9 @@ const GlassNftCard = ({ nft, address }) => {
                     </h3>
                     <p
                         className="text-sm text-white/70 mb-0 truncate"
-                        title={artistName}
+                        title={nft.creator}
                     >
-                        {artistName}
+                        {nft.creator}
                     </p>
                 </div>
             </div>

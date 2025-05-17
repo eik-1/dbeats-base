@@ -98,7 +98,7 @@ export const likeDislikeMusic = async (req, res) => {
 
 export const getLandingPageNfts = async (req, res) => {
   try {
-    const nfts = await Music.find({}).sort({ likeCount: -1 }).limit(4);
+    const nfts = await Music.find({}).limit(4);
     let nftDetails = [];
     let nftMetadata = [];
     await Promise.all(
@@ -183,6 +183,7 @@ export const getNftDetails = async (req, res) => {
   const query = gql`
     query GetNftDetails($address: String!) {
       nfts(where: { address: $address }) {
+        id
         address
         name
         mintPrice
@@ -227,8 +228,10 @@ export const getNftMetadata = async (req, res) => {
 
 export const getNftMetadataInternal = async (uri) => {
   if (uri && !uri.startsWith("https://")) {
-    uri = `https://${uri}`;
+    uri = uri.replace("ipfs://", "");
+    uri = `https://indigo-neighbouring-smelt-221.mypinata.cloud/ipfs/${uri}`;
   }
+  console.log("Here is the uri", uri);
   if (uri) {
     try {
       const response = await axios.get(uri);

@@ -32,24 +32,18 @@ function TrackInfo() {
     } = useMusic()
     const [isMintModalOpen, setIsMintModalOpen] = useState(false)
     const [likes, setLikes] = useState(0)
-    const [hasliked, setHasliked] = useState(false)
     const { isConnected } = useWeb3ModalAccount()
 
     useEffect(() => {
         if (address) {
-            console.log("Fetching NFT details for address:", address)
             fetchNftDetails(address)
             fetchLikes(address).then((data) => {
                 if (data && data.likeCount) {
                     setLikes(data.likeCount)
-                    if (data.hasLiked.includes(user.address)) {
-                        setHasliked(true)
-                        console.log(hasliked)
-                    }
                 }
             })
         }
-    }, [address, hasliked, likes])
+    }, [address, likes])
 
     function handlePlayClick() {
         if (

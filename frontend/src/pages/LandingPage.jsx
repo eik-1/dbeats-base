@@ -9,6 +9,7 @@ import Footer from "../components/pages/LandingPage/Footer"
 function LandingPage() {
     const [landingPageNfts, setLandingPageNfts] = useState([])
     const [addresses, setAddresses] = useState([])
+
     useEffect(() => {
         async function fetchLandingPageNfts() {
             const url = import.meta.env.VITE_SERVER_URL

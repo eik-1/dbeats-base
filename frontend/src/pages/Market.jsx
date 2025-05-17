@@ -51,6 +51,7 @@ function Market() {
                             <div className="flex flex-wrap gap-5">
                                 {nfts.map((nft) => (
                                     <NFTCard
+                                        key={nft.id}
                                         id={nft.id}
                                         uri={nft.tokenURI}
                                         price={nft.mintPrice}

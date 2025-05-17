@@ -39,30 +39,36 @@ function MyMusic() {
                 }
                 const nftAddresses = userData.mintedNfts
 
-                const nftDetailsPromises = nftAddresses.map((nftAddress) =>
-                    axios.post(`${serverUrl}/nft/getDetails`, { nftAddress }),
+                const nftDetails = await Promise.all(
+                    nftAddresses.map(async (currentNftAddress) => {
+                        try {
+                            const response = await axios.post(
+                                `${serverUrl}/nft/getDetails`,
+                                { nftAddress: currentNftAddress },
+                            )
+                            if (
+                                response.data &&
+                                response.data.nfts &&
+                                response.data.nfts.length > 0
+                            ) {
+                                return response.data.nfts[0]
+                            }
+                            console.warn(
+                                `Unexpected response structure or empty NFT data for address: ${currentNftAddress}`,
+                                response.data,
+                            )
+                            return null
+                        } catch (error) {
+                            console.error(
+                                `Error fetching details for NFT address: ${currentNftAddress}`,
+                                error,
+                            )
+                            return null
+                        }
+                    }),
                 )
 
-                const nftDetailsResponses =
-                    await Promise.all(nftDetailsPromises)
-
-                const fetchedNfts = nftDetailsResponses
-                    .map((response) => {
-                        if (
-                            response.data &&
-                            response.data.nfts &&
-                            response.data.nfts.length > 0
-                        ) {
-                            return response.data.nfts[0]
-                        }
-                        console.warn(
-                            "Unexpected response structure or empty NFT data for an address:",
-                            response.data,
-                        )
-                        return null
-                    })
-                    .filter((nft) => nft !== null)
-
+                const fetchedNfts = nftDetails.filter((nft) => nft !== null)
                 setUserNfts(fetchedNfts)
             } catch (err) {
                 console.error("Error fetching user's minted NFTs:", err)
@@ -101,9 +107,7 @@ function MyMusic() {
                     {userNfts.map((nft) => (
                         <Link
                             to={`/app/track/${nft.address}`}
-                            state={{ address: nft.address }}
                             key={nft.address}
-                            className=""
                         >
                             <NFTCard
                                 key={nft.id}

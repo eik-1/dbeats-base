@@ -8,7 +8,7 @@ import NotConnected from "./NotConnected"
 const LikeDislikeButton = ({ nftAddress, userAddress }) => {
     const [hasLiked, setHasLiked] = useState(false)
     const [heartFill, setHeartFill] = useState(hasLiked)
-    const [isMintModalOpen, setIsMintModalOpen] = useState(false)
+    const [isNotConnected, setIsNotConnected] = useState(false)
     const { isConnected } = useWeb3ModalAccount()
 
     const serverUrl = import.meta.env.VITE_SERVER_URL
@@ -28,17 +28,17 @@ const LikeDislikeButton = ({ nftAddress, userAddress }) => {
         fetchLikeStatus()
     }, [nftAddress, userAddress])
 
-    function handleMintClick() {
-        setIsMintModalOpen(true)
+    function handleNotConnected() {
+        setIsNotConnected(true)
     }
 
-    function handleCloseMintModal() {
-        setIsMintModalOpen(false)
+    function handleCloseNotConnected() {
+        setIsNotConnected(false)
     }
 
     const handleLikeDislike = async () => {
         if (!isConnected) {
-            handleMintClick()
+            handleNotConnected()
         } else {
             setHeartFill((prev) => !prev)
             try {
@@ -60,7 +60,7 @@ const LikeDislikeButton = ({ nftAddress, userAddress }) => {
             <div onClick={handleLikeDislike} className="ml-10 cursor-pointer">
                 {heartFill ? (
                     <Heart
-                        absoluteStrokeWidth={0}
+                        strokeWidth={0}
                         fill="oklch(69.6% 0.17 162.48)"
                         className="text-accent"
                     />
@@ -69,8 +69,8 @@ const LikeDislikeButton = ({ nftAddress, userAddress }) => {
                 )}
             </div>
             <NotConnected
-                isOpen={isMintModalOpen}
-                onClose={handleCloseMintModal}
+                isOpen={isNotConnected}
+                onClose={handleCloseNotConnected}
             />
         </>
     )
